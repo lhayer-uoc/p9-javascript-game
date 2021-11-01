@@ -12,52 +12,54 @@
   </head>
   <body>
     <h1>Aqui va el formulario de signup</h1>
+    <div class="gap-3">
 
-    <div class="container">
-      <form method="post">
-        <div class="row">
-          <div class="col">
-            <label for="inputName" class="col-form-label">Name</label>
+      <div class="container">
+        <form class="d-grid gap-3" method="post">
+          <div class="row">
+            <div class="col-3 offset-md-2">
+              <label for="inputName" class="col-form-label">Name</label>
+            </div>
+            <div class="col-5">
+              <input type="text" id="inputName" name="name" class="form-control" aria-describedby="nameHelpInline">
+            </div>
           </div>
-          <div class="col">
-            <input type="text" id="inputName" name="name" class="form-control" aria-describedby="nameHelpInline">
+          <div class="row">
+            <div class="col-3 offset-md-2">
+              <label for="inputEmail" class="col-form-label">Email</label>
+            </div>
+            <div class="col-5">
+              <input type="email" id="inputEmail" name="email" class="form-control" aria-describedby="emailHelpInline">
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label for="inputEmail" class="col-form-label">Email</label>
+          <div class="row">
+            <div class="col-3 offset-md-2">
+              <label for="inputPassword" class="col-form-label">Password</label>
+            </div>
+            <div class="col-5">
+              <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline">
+            </div>    
           </div>
-          <div class="col">
-            <input type="email" id="inputEmail" name="email" class="form-control" aria-describedby="emailHelpInline">
+          <div class="row">
+            <div class="col-3 offset-md-2">
+              <label for="colorInput" class="form-label">Color picker</label>
+            </div>
+            <div class="col-5">
+              <input type="color" name="color" class="form-control form-control-color" id="colorInput" value="#563d7c" title="Choose your color">
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label for="inputPassword" class="col-form-label">Password</label>
+          <div class="row">
+            <div class="col-3 offset-md-2">
+              <label for="formFile" class="form-label">Select your avatar</label>
+            </div>
+            <div class="col-5">
+              <input class="form-control" type="file" name="image" id="formFile">
+            </div>
           </div>
-          <div class="col">
-            <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline">
-          </div>    
-        </div>
-        <div class="row">
-          <div class="col">
-            <label for="colorInput" class="form-label">Color picker</label>
-          </div>
-          <div class="col">
-            <input type="color" name="color" class="form-control form-control-color" id="colorInput" value="#563d7c" title="Choose your color">
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <label for="formFile" class="form-label">Select your avatar</label>
-          </div>
-          <div class="col">
-            <input class="form-control" type="file" name="image" id="formFile">
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+  
+          <button type="submit" class="btn btn-primary col-8 offset-md-2">Submit</button>
+        </form>
+      </div>
     </div>
   </body>
 </html>

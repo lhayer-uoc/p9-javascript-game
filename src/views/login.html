@@ -14,32 +14,24 @@
     <h1>Aqui va el formulario de login</h1>
 
     <div class="container">
-      <form method="post">
+      <form class="d-grid gap-3" method="post">
         <div class="row">
-          <div class="col">
-            <div class="row g-3 align-items-center">
-              <div class="col">
-                <label for="inputEmail" class="col-form-label">Email</label>
-              </div>
-              <div class="col">
-                <input type="email" id="inputEmail" name="email" class="form-control" aria-describedby="emailHelpInline">
-              </div>
-            </div>
+          <div class="col-3 offset-md-2">
+            <label for="inputEmail" class="col-form-label">Email</label>
+          </div>
+          <div class="col-5">
+            <input type="email" id="inputEmail" name="email" class="form-control" aria-describedby="emailHelpInline">
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <div class="row g-3 align-items-center">
-              <div class="col">
-                <label for="inputPassword" class="col-form-label">Password</label>
-              </div>
-              <div class="col">
-                <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline">
-              </div>
-            </div>
+          <div class="col-3 offset-md-2">
+            <label for="inputPassword" class="col-form-label">Password</label>
+          </div>
+          <div class="col-5">
+            <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline">
           </div>    
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary col-8 offset-md-2">Submit</button>
       </form>
     </div>
   </body>
