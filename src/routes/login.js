@@ -4,7 +4,7 @@ const path = require('path');
 const LoginController = require('../controllers/login');
 const getReqData = require('../utils');
 
-const userRouter = async (req, res) => {
+const loginRouter = async (req, res) => {
   if (req.url === '/login' && req.method === 'POST') {
     // Try login
     const body = await getReqData(req);
@@ -31,4 +31,4 @@ const userRouter = async (req, res) => {
   }
 };
 
-module.exports = userRouter;
+module.exports = loginRouter;

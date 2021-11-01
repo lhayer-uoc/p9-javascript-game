@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const userRouter = require('./user');
 const loginRouter = require('./login');
+const signupRouter = require('./signup');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -11,6 +12,8 @@ const router = (req, res) => {
     userRouter(req, res);
   } else if (isLoginRoute(url)) {
     loginRouter(req, res);
+  } else if (isSignupRoute(url)) {
+    signupRouter(req, res);
   } else if (req.url === '/') {
     fs.readFile(`${publicPath}/index.html`, 'UTF-8', (error, html) => {
       if (error) {
@@ -33,6 +36,10 @@ const isUserRoute = url => {
 
 const isLoginRoute = url => {
   return url === '/login';
+};
+
+const isSignupRoute = url => {
+  return url === '/signup';
 };
 
 module.exports = router;
