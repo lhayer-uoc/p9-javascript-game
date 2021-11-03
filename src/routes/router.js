@@ -23,9 +23,14 @@ const router = (req, res) => {
       res.end(html);
     });
   } else if (req.url.match('.css$')) {
-    const cssPath = path.join(__dirname, '../public', req.url);
+    const cssPath = path.join(__dirname, '../public/css', req.url);
     const fileStream = fs.createReadStream(cssPath, 'UTF-8');
     res.writeHead(200, { 'Content-Type': 'text/css' });
+    fileStream.pipe(res);
+  } else if (req.url.match('.js$')) {
+    const cssPath = path.join(__dirname, '../public/js', req.url);
+    const fileStream = fs.createReadStream(cssPath, 'UTF-8');
+    res.writeHead(200, { 'Content-Type': 'text/javascript	' });
     fileStream.pipe(res);
   }
 };

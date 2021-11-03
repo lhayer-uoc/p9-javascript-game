@@ -8,16 +8,9 @@ const signupRouter = async (req, res) => {
   if (req.url === '/signup' && req.method === 'POST') {
     // Signup user
     const body = await getReqData(req);
-    const signupData = new URLSearchParams(body);
+    const signupData = JSON.parse(body);
 
-    const signupBody = {
-      email: signupData.get('email'),
-      password: signupData.get('password'),
-      name: signupData.get('name'),
-      color: signupData.get('color'),
-      image: signupData.get('image'),
-    };
-    const user = SignupController.signupUser(signupBody);
+    const user = SignupController.signupUser(signupData);
     if (user) {
       res.writeHead(301, { Location: '/rooms' });
       res.end();
