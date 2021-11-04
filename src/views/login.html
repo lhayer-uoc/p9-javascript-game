@@ -11,10 +11,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
   </head>
   <body>
-    <h1>Aqui va el formulario de login</h1>
-
+    
     <div class="container">
       <form class="d-grid gap-3" method="post">
+        <div class="row">
+          <div class="col-8 offset-md-2">
+            <h3>Ingresar al juego</h3>
+          </div>
+        </div>
         <div class="row">
           <div class="col-3 offset-md-2">
             <label for="inputEmail" class="col-form-label">Email</label>
@@ -25,13 +29,16 @@
         </div>
         <div class="row">
           <div class="col-3 offset-md-2">
-            <label for="inputPassword" class="col-form-label">Password</label>
+            <label for="inputPassword" class="col-form-label">Contraseña</label>
           </div>
           <div class="col-5">
             <input type="password" id="inputPassword" name="password" class="form-control" aria-describedby="passwordHelpInline">
           </div>    
         </div>
-        <button type="submit" class="btn btn-primary col-8 offset-md-2">Submit</button>
+        <button type="submit" class="btn btn-primary col-8 offset-md-2">Entrar</button>
+        <div class="col-8 offset-md-2">
+          Si no tienes una cuenta puedes crearla desde <a href="signup">aquí</a>
+        </div>
       </form>
     </div>
   </body>

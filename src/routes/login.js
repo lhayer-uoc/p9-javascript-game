@@ -14,7 +14,7 @@ const loginRouter = async (req, res) => {
       password: loginData.get('password'),
     };
     if (LoginController.loginUser(loginBody)) {
-      res.writeHead(301, { Location: '/rooms' });
+      res.writeHead(301, { Location: '/room-game' });
       res.end();
     } else {
       res.setHeader('Content-Type', 'application/json');

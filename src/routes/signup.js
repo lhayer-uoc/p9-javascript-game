@@ -12,7 +12,7 @@ const signupRouter = async (req, res) => {
 
     const user = SignupController.signupUser(signupData);
     if (user) {
-      res.writeHead(301, { Location: '/rooms' });
+      res.writeHead(301, { Location: '/room-game' });
       res.end();
     } else {
       res.setHeader('Content-Type', 'application/json');

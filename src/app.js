@@ -9,6 +9,7 @@ const serverConfigFile = fs.readFileSync(
   path.join(__dirname, '/config/env.json'),
   'utf-8'
 );
+
 const serverConfig = JSON.parse(serverConfigFile);
 const hostname = serverConfig['hostname'] || 'localhost';
 const port = serverConfig['port'] || 3000;
