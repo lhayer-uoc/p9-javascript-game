@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const roomRouter = require('./room');
+
 const userRouter = require('./user');
 const loginRouter = require('./login');
 const signupRouter = require('./signup');
@@ -10,6 +12,8 @@ const router = (req, res) => {
   const url = req.url;
   if (isUserRoute(url)) {
     userRouter(req, res);
+  } else if (isRoomRoute(url)) {
+    roomRouter(req, res);
   } else if (isLoginRoute(url)) {
     loginRouter(req, res);
   } else if (isSignupRoute(url)) {
@@ -32,11 +36,14 @@ const router = (req, res) => {
     const fileStream = fs.createReadStream(cssPath, 'UTF-8');
     res.writeHead(200, { 'Content-Type': 'text/javascript	' });
     fileStream.pipe(res);
-  }
 };
 
 const isUserRoute = url => {
   return url === '/users' || url.match(/\/users\/([0-9]+)/);
+};
+
+const isRoomRoute = url => {
+  return url === '/rooms' || url.match(/\/rooms\/([0-9]+)/);
 };
 
 const isLoginRoute = url => {
@@ -45,6 +52,6 @@ const isLoginRoute = url => {
 
 const isSignupRoute = url => {
   return url === '/signup';
-};
+}
 
 module.exports = router;
