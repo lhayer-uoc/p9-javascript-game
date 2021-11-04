@@ -3,7 +3,7 @@ const RoomModel = require('../models/room');
 const getReqData = require('../utils');
 
 const roomRouter = async (req, res) => {
-  // Consultar todos los rooms
+  // Consultar todoas las salas
   if (req.url === '/rooms' && req.method === 'GET') {
     try {
       const rooms = RoomController.getRooms();
@@ -13,10 +13,10 @@ const roomRouter = async (req, res) => {
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;
-      res.end(JSON.stringify({ message: error }));// Se muestra este error
+      res.end(JSON.stringify({ message: error }));
     }
   } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'GET') {
-    // Consultar un solo room
+    // Consultar una sola sala
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
@@ -37,7 +37,7 @@ const roomRouter = async (req, res) => {
       res.end(JSON.stringify({ message: error }));
     }
   } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'DELETE') {
-    // Eliminar un usuario
+    // Eliminar una sala
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
@@ -52,20 +52,16 @@ const roomRouter = async (req, res) => {
       res.end(JSON.stringify({ message: error }));
     }
   } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'PATCH') {
-    // Actualizar un usuario
+    // Actualizar una sala
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
 
       const body = await getReqData(req);
 
-      const { name, Users } = JSON.parse(body);
+      const { name, users } = JSON.parse(body);
 
-      const room = new RoomModel(
-        idNormalized,
-        name,
-        Users
-      );
+      const room = new RoomModel(idNormalized, name, users);
       const roomUpdated = RoomController.updateRoom(idNormalized, room);
 
       res.setHeader('Content-Type', 'application/json');
@@ -77,7 +73,7 @@ const roomRouter = async (req, res) => {
       res.end(JSON.stringify({ message: error }));
     }
   } else if (req.url === '/rooms' && req.method === 'POST') {
-    // Crear un usuario
+    // Crear una sala
 
     const body = await getReqData(req);
     const roomBody = JSON.parse(body);

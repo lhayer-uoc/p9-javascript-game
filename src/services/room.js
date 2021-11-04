@@ -1,14 +1,13 @@
 class RoomService {
-    static rooms = [];
-  
-    static getRooms() {
-      return this.rooms;
-    }
-  
-    static setRooms(rooms) {
-      this.rooms = rooms;
-    }
+  static rooms = [];
+
+  static getRooms() {
+    return this.rooms;
   }
-  
-  module.exports = RoomService;
-  
+
+  static setRooms(rooms) {
+    this.rooms = rooms;
+  }
+}
+
+module.exports = RoomService;

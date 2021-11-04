@@ -5,8 +5,8 @@ const router = (req, res) => {
   const url = req.url;
   if (isUserRoute(url)) {
     userRouter(req, res);
-  } else if ( isRoomRoute(url)) {
-    roomRouter(req,res);
+  } else if (isRoomRoute(url)) {
+    roomRouter(req, res);
   }
 };
 
