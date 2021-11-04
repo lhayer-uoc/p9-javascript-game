@@ -3,17 +3,17 @@ const RoomModel = require('../models/room');
 const getReqData = require('../utils');
 
 const roomRouter = async (req, res) => {
-  // Consultar todos los usuarios
+  // Consultar todos los rooms
   if (req.url === '/rooms' && req.method === 'GET') {
     try {
-      const rooms = RoomController.getUsersRooms();
+      const rooms = RoomController.getRooms();
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
       res.end(JSON.stringify(rooms));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;
-      res.end(JSON.stringify({ message: error }));
+      res.end(JSON.stringify({ message: error }));// Se muestra este error
     }
   } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'GET') {
     // Consultar un solo room
@@ -59,12 +59,12 @@ const roomRouter = async (req, res) => {
 
       const body = await getReqData(req);
 
-      const { name, UserModel } = JSON.parse(body);
+      const { name, Users } = JSON.parse(body);
 
       const room = new RoomModel(
         idNormalized,
         name,
-        UserModel
+        Users
       );
       const roomUpdated = RoomController.updateRoom(idNormalized, room);
 

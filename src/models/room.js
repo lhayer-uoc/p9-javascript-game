@@ -1,8 +1,8 @@
 class RoomModel {
-    constructor(id, name, UserModel) {
+    constructor(id, name, Users) {
       this.id = id;
       this.name = name;
-      this.UserModel = UserModel;
+      this.Users = Users;
     }
   }
   
