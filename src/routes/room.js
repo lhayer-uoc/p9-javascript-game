@@ -1,5 +1,5 @@
 const RoomController = require('../controllers/room');
-const RoomModel = require('../models/room');
+const RoomModel = require('../models/Room');
 const getReqData = require('../utils');
 
 const roomRouter = async (req, res) => {

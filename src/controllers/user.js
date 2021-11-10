@@ -11,6 +11,11 @@ class UserController {
     return users.find(user => user.id === id);
   }
 
+  static getUserByEmail(email) {
+    const users = userService.getUsers();
+    return users.find(user => user.email === email);
+  }
+
   static createUser(user) {
     // TODO: ADD VALIDATORS
     const id = Math.floor(4 + Math.random() * 10);
