@@ -27,10 +27,11 @@ const userRouter = async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 200;
         res.end(JSON.stringify(user));
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = 404;
+        res.end(JSON.stringify(user));
       }
-      res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 404;
-      res.end(JSON.stringify(user));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;

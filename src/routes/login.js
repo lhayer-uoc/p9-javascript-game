@@ -2,20 +2,24 @@ const fs = require('fs');
 const path = require('path');
 
 const LoginController = require('../controllers/login');
+const UserController = require('../controllers/user');
 const getReqData = require('../utils');
 
 const loginRouter = async (req, res) => {
   if (req.url === '/login' && req.method === 'POST') {
     // Try login
-    const body = await getReqData(req);
-    const loginData = new URLSearchParams(body);
-    const loginBody = {
-      email: loginData.get('email'),
-      password: loginData.get('password'),
-    };
-    if (LoginController.loginUser(loginBody)) {
-      res.writeHead(301, { Location: '/room-game' });
-      res.end();
+    let body = await getReqData(req);
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+
+    if (LoginController.loginUser(body)) {
+      const user = UserController.getUserByEmail(body.email);
+      delete user.password;
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+      });
+      res.end(JSON.stringify(user));
     } else {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 404;

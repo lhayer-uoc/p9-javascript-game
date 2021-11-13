@@ -1,0 +1,43 @@
+.flex {
+  display: flex;
+}
+
+.flex-container.columns {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-container.rows {
+  display: flex;
+  flex-direction: rows;
+}
+
+.sidebar-user .user-logo {
+  height: 150px;
+  width: 150px;
+  cursor: move;
+}
+
+.rooms-header {
+  margin-bottom: 40px;
+}
+
+.rooms-container .row.draggable {
+  height: 100px;
+  align-items: center;
+  border: 1px solid black;
+}
+
+.rooms-container .row.draggable.over {
+  border: 1px solid blue;
+}
+
+.flex-1 {
+  flex: 1;
+}
+.flex-2 {
+  flex: 2;
+}
+.flex-3 {
+  flex: 3;
+}
