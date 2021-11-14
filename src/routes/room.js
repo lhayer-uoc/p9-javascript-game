@@ -27,10 +27,11 @@ const roomRouter = async (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 200;
         res.end(JSON.stringify(room));
+      } else {
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = 404;
+        res.end(JSON.stringify(room));
       }
-      res.setHeader('Content-Type', 'application/json');
-      res.statusCode = 404;
-      res.end(JSON.stringify(room));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;
