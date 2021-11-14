@@ -1,10 +1,12 @@
 $(document).ready(async function () {
   let user = null;
   let rooms = [];
+  let dragElement = null;
 
   try {
-    user = await getUser(1);
-    rooms = await getRooms(1);
+    user = getUserFromLocalStorage();
+    // user = await getUser(); -- Actualmente usando los datos del localStorage
+    rooms = await getRooms();
   } catch (error) {
     console.log(error);
     alert('Error al solicitar los datos del usuario');
@@ -17,118 +19,218 @@ $(document).ready(async function () {
 
   if (rooms && rooms.length) {
     renderRooms(rooms);
+    renderPlayers(rooms);
+  }
+  // GET DATA FUNCTIONS
+
+  function getUserFromLocalStorage() {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return JSON.parse(user);
+    }
+    return null;
+  }
+
+  async function getUser(id) {
+    const response = await fetch(`http://localhost:3000/users/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function getRooms() {
+    const response = await fetch('http://localhost:3000/rooms', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function getRoomById(id) {
+    let room = null;
+    try {
+      room = await getRoom(id);
+      return room;
+    } catch (error) {
+      console.log(error);
+      alert('Error al solicitar los datos del usuario');
+      return null;
+    }
+  }
+
+  async function getRoom(id) {
+    const response = await fetch(`http://localhost:3000/rooms/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function updateRoom(room) {
+    const response = await fetch(`http://localhost:3000/rooms/${room.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(room),
+    });
+    return response.json();
+  }
+
+  // RENDER FUNCTIONS
+
+  function renderUser(user) {
+    paintUserLogo(user);
+    paintUserName(user);
+  }
+
+  function renderRooms(rooms) {
+    rooms.forEach(room => {
+      const row = getRowSection(room);
+      row.on('dragenter', handleDragEnter);
+      row.on('dragleave', handleDragLeave);
+      row.on('dragover', handleDragOver);
+      row.on('drop dragdrop', handleDrop);
+      const nameSection = getRoomNameSection(room);
+      row.append(nameSection);
+      const playerSection = getRoomPlayersSection();
+      row.append(playerSection);
+      const stateSection = getRoomStateSection(room);
+      row.append(stateSection);
+
+      $(row).appendTo('.rooms-container');
+    });
+  }
+
+  async function renderPlayers(rooms) {
+    for (const room of rooms) {
+      if (room.users.length) {
+        for (const id of room.users) {
+          const user = await getUser(id);
+          const roomRow = $(`[data-room-id=${room.id}]`);
+          if (roomRow) {
+            const playersContainer = $(roomRow).children('.players-container');
+            if (playersContainer) {
+              const image = $('<img>', {
+                class: 'user-logo img-thumbnail',
+                src: user.image,
+              });
+              $(image).appendTo(playersContainer);
+            }
+          }
+        }
+      }
+    }
+  }
+  // PAINT FUNCTIONS
+
+  function paintUserLogo(user) {
+    const imageList = document.querySelectorAll('.user-logo');
+
+    if (imageList.length) {
+      const imageElement = imageList[0];
+      imageElement.setAttribute('src', user.image);
+      imageElement.addEventListener('dragstart', handleImageDragStart);
+      imageElement.addEventListener('dragend', handleImageDragStop);
+    }
+  }
+
+  function paintUserName(user) {
+    const userSpans = document.querySelectorAll('.user-name');
+    if (userSpans.length) {
+      const spanElement = userSpans[0];
+      spanElement.textContent = user.name;
+    }
+  }
+
+  function getRowSection(room) {
+    return $('<div>', { class: 'row draggable', 'data-room-id': room.id });
+  }
+
+  function getRoomNameSection(room) {
+    const $div = $('<div>', { class: 'col-4' })
+      .append('<span>')
+      .text(room.name);
+    return $div;
+  }
+
+  function getRoomPlayersSection() {
+    return $('<div>', { class: 'col-4 players-container flex' });
+  }
+
+  function getRoomStateSection(room) {
+    const $div = $('<div>', { class: 'col-4' });
+    return $div.append('<span>').text(room.state);
+  }
+
+  // LOGIC
+  async function addUserToRoom(room) {
+    if (user && !room.users.includes(user.id)) {
+      try {
+        room.users.push(user.id);
+        return await updateRoom(room);
+      } catch (error) {
+        console.error(error);
+        alert('Error al actualizar la sala');
+        return null;
+      }
+    } else {
+      alert('El usuario ya se encuentra registrado en la sala');
+    }
+  }
+
+  // EVENTS INTERACTIONS
+
+  function handleImageDragStart(e) {
+    dragElement = $(this).clone();
+    $(dragElement).attr('data-user-id', user.id);
+    this.style.opacity = '0.4';
+  }
+
+  function handleImageDragStop(e) {
+    this.style.opacity = '1';
+  }
+
+  function handleDragEnter(e) {
+    e.preventDefault();
+    this.classList.add('over');
+  }
+
+  function handleDragLeave(e) {
+    e.preventDefault();
+    this.classList.remove('over');
+  }
+
+  function handleDragOver(e) {
+    this.classList.add('over');
+    e.preventDefault();
+  }
+
+  async function handleDrop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    this.classList.remove('over');
+    const roomId = $(this).attr('data-room-id');
+    const room = await getRoomById(roomId);
+    const updatedRoom = await addUserToRoom(room);
+    if (updatedRoom) {
+      const playersContainerElement = $(this).children('.players-container');
+      $(dragElement).appendTo(playersContainerElement);
+      localStorage.setItem('favouriteRoom', room.id);
+      setTimeout(() => {
+        window.location.replace('/game');
+      }, 1500);
+    }
   }
 });
-
-// GET DATA FUNCTIONS
-
-async function getUser(id) {
-  const response = await fetch(`http://localhost:3000/users/${id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  });
-  return response.json();
-}
-
-async function getRooms() {
-  const response = await fetch('http://localhost:3000/rooms', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  });
-  return response.json();
-}
-
-// RENDER FUNCTIONS
-
-function renderUser(user) {
-  paintUserLogo(user);
-  paintUserName(user);
-}
-
-function renderRooms(rooms) {
-  rooms.forEach(room => {
-    const row = getRowSection();
-    row.on('dragenter', handleDragEnter);
-    row.on('dragleave', handleDragLeave);
-    // row.addEventListener('dragend', handleDragEnd);
-    row.on('dragdrop', handleDrop);
-    const nameSection = getRoomNameSection(room);
-    row.append(nameSection);
-    const playerSection = getRoomPlayersSection(room);
-    row.append(playerSection);
-    const stateSection = getRoomStateSection(room);
-    row.append(stateSection);
-
-    $(row).appendTo('.rooms-container');
-  });
-}
-
-// PAINT FUNCTIONS
-
-function paintUserLogo(user) {
-  const imageList = document.querySelectorAll('.user-logo');
-
-  if (imageList.length) {
-    const imageElement = imageList[0];
-    imageElement.setAttribute('src', user.image);
-    imageElement.addEventListener('dragstart', handleImageDragStart);
-    imageElement.addEventListener('dragend', handleImageDragStop);
-  }
-}
-
-function paintUserName(user) {
-  const userSpans = document.querySelectorAll('.user-name');
-  if (userSpans.length) {
-    const spanElement = userSpans[0];
-    spanElement.textContent = user.name;
-  }
-}
-
-function getRowSection() {
-  return $('<div>', { class: 'row draggable' });
-}
-
-function getRoomNameSection(room) {
-  const $div = $('<div>', { class: 'col-4' }).append('<span>').text(room.name);
-  return $div;
-}
-
-function getRoomPlayersSection(room) {
-  return $('<div>', { class: 'col-4' });
-}
-
-function getRoomStateSection(room) {
-  const $div = $('<div>', { class: 'col-4' });
-  return $div.append('<span>').text(room.state);
-}
-
-// EVENTS INTERACTIONS
-
-function handleImageDragStart(e) {
-  this.style.opacity = '0.4';
-}
-
-function handleImageDragStop(e) {
-  this.style.opacity = '1';
-}
-
-function handleDragEnter(e) {
-  this.classList.add('over');
-}
-
-function handleDragLeave(e) {
-  this.classList.remove('over');
-}
-
-function handleDrop(e) {
-  this.classList.remove('over');
-  // Add user to room
-  // Save favorite room
-  // Start game
-}

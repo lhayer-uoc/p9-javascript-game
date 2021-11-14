@@ -15,7 +15,8 @@ const loginRouter = async (req, res) => {
 
     if (LoginController.loginUser(body)) {
       const user = UserController.getUserByEmail(body.email);
-      delete user.password;
+      // TODO DELETE USER PASSWORD ON RESPONSE
+      // delete user.password;
       res.writeHead(200, {
         'Content-Type': 'application/json',
       });
