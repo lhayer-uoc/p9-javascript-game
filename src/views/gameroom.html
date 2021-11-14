@@ -13,7 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="../public/css/game.css">
 </head>
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-	<a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
+	<a href="/src/views/gameroom.html" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
 		<i class="bi bi-controller" style="font-size: 5rem; color: blue;"></i>
 	</a>
 
@@ -29,7 +29,14 @@
 	<p class="text-center">Turn: <span id="turn"></span></p>
 </header>
 <body>
-	<div class="d-flex justify-content-center">
+	<div class="container fluid">
+		<div class="row">
+			<div class="col-3">
+				<div class="row"><i class=" bi bi-person "  style="font-size: 10rem; color: yellow; text-align: center;"></i></i></div>
+				<div class="row"><i class=" bi bi-person" style="font-size: 10rem; color: green; text-align: center;"></i></i></div>
+			</div>
+			<div class="col-6">
+				<div class="container" style= "text-align: center">
 					<div id="game">
 						<div id="columnOne">
 							<div id="a6" class="white"></div>
@@ -87,6 +94,12 @@
 							<div id="g2" class="white"></div>
 							<div id="g1" class="white"></div>
 						</div>
+					</div>
+					</div>
+					</div>
+					<div class="col-3">
+						<div class="row"><i class=" bi-person" style="font-size: 10rem; color: blue; text-align: center;"></i></i></div>
+						<div class="row"><i class=" bi-person" style="font-size: 10rem; color: red; text-align: center;"></i></i></div>
 					</div>
 		 		 </div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

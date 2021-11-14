@@ -85,3 +85,6 @@ p {
     -webkit-border-radius: 75px;
     width: 150px;
 }
+.bi-person.style {
+    text-align: center;
+}
