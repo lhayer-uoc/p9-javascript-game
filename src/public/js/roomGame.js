@@ -89,6 +89,51 @@ $(document).ready(async function () {
     return response.json();
   }
 
+  async function createGame(room) {
+    const game = {
+      playersData: getPlayersData(room),
+      turn: null,
+      roomId: room.id,
+    };
+
+    const response = await fetch('http://localhost:3000/games', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(game),
+    });
+    return response.json();
+  }
+
+  async function updateGame(room) {
+    const game = {
+      playersData: getPlayersData(room),
+      turn: null,
+    };
+
+    const response = await fetch(`http://localhost:3000/games/${room.game}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(game),
+    });
+    return response.json();
+  }
+
+  function getPlayersData(room) {
+    const playersData = [];
+    if (room.users.length) {
+      room.users.forEach(user => {
+        playersData.push({ playerId: user, points: 0 });
+      });
+    }
+    return playersData;
+  }
+
   // RENDER FUNCTIONS
 
   function renderUser(user) {
@@ -241,8 +286,18 @@ $(document).ready(async function () {
       const playersContainerElement = $(this).children('.players-container');
       $(dragElement).appendTo(playersContainerElement);
       localStorage.setItem('favouriteRoom', room.id);
+
+      // TODO UPDATE ROOM STATE
+
+      let game = null;
+      if (!updatedRoom.game) {
+        game = await createGame(room);
+      } else {
+        game = await updateGame(room);
+      }
+
       setTimeout(() => {
-        window.location.replace('/game');
+        window.location.replace(`/play/${game.id}`);
       }, 1500);
     }
   }
