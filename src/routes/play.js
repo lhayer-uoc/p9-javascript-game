@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const playRouter = async (req, res) => {
-  if (req.url === '/play' && req.method === 'GET') {
-    // Render login page
+const roomGameRouter = async (req, res) => {
+  if (req.url === '/room-game' && req.method === 'GET') {
+    // Render room game page
     res.writeHead(200, {
       'Content-Type': 'text/html',
     });
@@ -12,4 +12,4 @@ const playRouter = async (req, res) => {
   }
 };
 
-module.exports = playRouter;
+module.exports = roomGameRouter;

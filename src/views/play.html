@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
   <head>
     <meta charset="UTF-8" />
@@ -11,6 +11,55 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
   </head>
   <body>
+    
+    <div class="header">
+      <div class="game-name">
+        Nombre del juego
+      </div>
+      <div class="flex">
+        <div class="user-name-header"></div>
+        <div class="user-action"></div>
+      </div>
+    </div>
+    <div class="flex-container rows">
+      <div class="flex flex-1 sidebar-user">
+        <div class="container">
+          
+          <div class="user-name-container">
+            <h5>Jugador</h5>
+            <span class="user-name"></span>
+          </div>
+          <div class="user-logo-container flex">
+            <img draggable="true" class="user-logo img-thumbnail">
+          </div>
+          <div class="user-statistics-container">
+            <h5>Estadísticas del usuario</h5>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-3 rooms-section">
+        <div class="container">
+          <div class="rooms-header">
+            <h3>Salas del juego</h3>
+            <span>Ingresa a una sala disponible para comenzar a jugar.</span>
+          </div>
+          <div class="rooms-container d-grid gap-5">
+            <div class="row">
+              <div class="col-4">
+                <h5>Sala</h5>
+              </div>
+              <div class="col-4">
+                <h5>Jugadores</h5>
+              </div>
+              <div class="col-4">
+                <h5>Estado</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h3></h3>
+    </div>
   </body>
   <footer>
     <script type="text/javascript" src="./play.js"></script>
