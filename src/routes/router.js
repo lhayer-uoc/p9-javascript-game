@@ -73,7 +73,7 @@ const isGameRoute = url => {
 };
 
 const isPlayRoute = url => {
-  return url === url.match(/\/play\/([0-9]+)/);
+  return url === '/play' || url.match(/\/play\/([0-9]+)/);
 };
 
 module.exports = router;
