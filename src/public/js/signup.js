@@ -75,10 +75,18 @@ $(document).ready(function () {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-    })
-      .then(r => r.json())
-      .then(res => {
-        console.log(res);
-      });
+    }).then(
+      response => {
+        if (response && response.status === 200) {
+          window.location.replace('/login');
+        } else {
+          alert('Error al enviar el formulario');
+        }
+      },
+      error => {
+        console.log('ERROR', error);
+        alert('Error al enviar el formulario');
+      }
+    );
   });
 });

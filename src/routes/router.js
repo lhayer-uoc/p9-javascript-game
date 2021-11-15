@@ -5,6 +5,9 @@ const roomRouter = require('./room');
 const userRouter = require('./user');
 const loginRouter = require('./login');
 const signupRouter = require('./signup');
+const roomGameRouter = require('./room-game');
+const gameRouter = require('./game');
+const playRouter = require('./play');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -18,6 +21,12 @@ const router = (req, res) => {
     loginRouter(req, res);
   } else if (isSignupRoute(url)) {
     signupRouter(req, res);
+  } else if (isRoomGameRoute(url)) {
+    roomGameRouter(req, res);
+  } else if (isGameRoute(url)) {
+    gameRouter(req, res);
+  } else if (isPlayRoute(url)) {
+    playRouter(req, res);
   } else if (req.url === '/') {
     fs.readFile(`${publicPath}/index.html`, 'UTF-8', (error, html) => {
       if (error) {
@@ -53,6 +62,18 @@ const isLoginRoute = url => {
 
 const isSignupRoute = url => {
   return url === '/signup';
+};
+
+const isRoomGameRoute = url => {
+  return url === '/room-game';
+};
+
+const isGameRoute = url => {
+  return url === '/games' || url.match(/\/games\/([0-9]+)/);
+};
+
+const isPlayRoute = url => {
+  return url === url.match(/\/play\/([0-9]+)/);
 };
 
 module.exports = router;
