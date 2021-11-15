@@ -1,87 +1,87 @@
-const RoomController = require('../controllers/room');
-const RoomModel = require('../models/Room');
+const GameController = require('../controllers/game');
+const GameModel = require('../models/Game');
 const getReqData = require('../utils');
 
-const roomRouter = async (req, res) => {
-  // Consultar todoas las salas
-  if (req.url === '/rooms' && req.method === 'GET') {
+const gameRouter = async (req, res) => {
+  // Consultar todos los juegos
+  if (req.url === '/games' && req.method === 'GET') {
     try {
-      const rooms = RoomController.getRooms();
+      const games = GameController.getGames();
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
-      res.end(JSON.stringify(rooms));
+      res.end(JSON.stringify(games));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;
       res.end(JSON.stringify({ message: error }));
     }
-  } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'GET') {
-    // Consultar una sola sala
+  } else if (req.url.match(/\/games\/([0-9]+)/) && req.method === 'GET') {
+    // Consultar un solo juego
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
 
-      const room = RoomController.getRoom(idNormalized);
+      const game = GameController.getGame(idNormalized);
 
-      if (room) {
+      if (game) {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 200;
-        res.end(JSON.stringify(room));
+        res.end(JSON.stringify(game));
       } else {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 404;
-        res.end(JSON.stringify(room));
+        res.end(JSON.stringify(game));
       }
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 500;
       res.end(JSON.stringify({ message: error }));
     }
-  } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'DELETE') {
-    // Eliminar una sala
+  } else if (req.url.match(/\/games\/([0-9]+)/) && req.method === 'DELETE') {
+    // Eliminar un juego
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-      const roomDeleted = RoomController.deleteRoom(idNormalized);
+      const gameDeleted = GameController.deleteGame(idNormalized);
 
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
-      res.end(JSON.stringify(roomDeleted));
+      res.end(JSON.stringify(gameDeleted));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 404;
       res.end(JSON.stringify({ message: error }));
     }
-  } else if (req.url.match(/\/rooms\/([0-9]+)/) && req.method === 'PATCH') {
-    // Actualizar una sala
+  } else if (req.url.match(/\/games\/([0-9]+)/) && req.method === 'PATCH') {
+    // Actualizar un juego
     try {
       const id = req.url.split('/')[2];
       const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
 
       const body = await getReqData(req);
 
-      const { name, users, state, game } = JSON.parse(body);
+      const { playersData, turn } = JSON.parse(body);
 
-      const room = new RoomModel(idNormalized, name, users, state, game);
-      const roomUpdated = RoomController.updateRoom(idNormalized, room);
+      const game = new GameModel(idNormalized, playersData, turn);
+      const gameUpdated = GameController.updateGame(idNormalized, game);
 
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 200;
-      res.end(JSON.stringify(roomUpdated));
+      res.end(JSON.stringify(gameUpdated));
     } catch (error) {
       res.setHeader('Content-Type', 'application/json');
       res.statusCode = 404;
       res.end(JSON.stringify({ message: error }));
     }
-  } else if (req.url === '/rooms' && req.method === 'POST') {
-    // Crear una sala
+  } else if (req.url === '/games' && req.method === 'POST') {
+    // Crear un juego
 
     const body = await getReqData(req);
-    const roomBody = JSON.parse(body);
-    const roomCreated = RoomController.createRoom(roomBody);
+    const gameBody = JSON.parse(body);
+    const gameCreated = GameController.createGame(gameBody);
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 200;
-    res.end(JSON.stringify(roomCreated));
+    res.end(JSON.stringify(gameCreated));
   } else {
     res.setHeader('Content-Type', 'application/json');
     res.statusCode = 404;
@@ -89,4 +89,4 @@ const roomRouter = async (req, res) => {
   }
 };
 
-module.exports = roomRouter;
+module.exports = gameRouter;

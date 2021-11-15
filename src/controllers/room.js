@@ -13,8 +13,8 @@ class RoomController {
 
   static createRoom(room) {
     const id = Math.floor(4 + Math.random() * 10);
-    const { name, users } = room;
-    const newRoom = new RoomModel(id, name, users);
+    const { name, users, state, game } = room;
+    const newRoom = new RoomModel(id, name, users, state, game);
     const rooms = roomService.getRooms();
     rooms.push(newRoom);
     return newRoom;
@@ -26,6 +26,8 @@ class RoomController {
     if (roomFound) {
       roomFound.name = room.name;
       roomFound.users = room.users;
+      roomFound.state = room.state;
+      roomFound.game = room.game;
     }
     return roomFound;
   }
