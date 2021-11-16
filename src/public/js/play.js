@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  var checkIfSomeoneWon = function () {
+  const checkIfSomeoneWon = function () {
     if (
       $('#columnOne').children().eq(5).hasClass('red') &&
       $('#columnOne').children().eq(4).hasClass('red') &&
@@ -969,11 +969,11 @@ $(document).ready(function () {
     }
   };
 
-  var dropCoin = function (column, t) {
+  const dropCoin = function (column, t) {
     //column = "this" t = "turn"
 
     //empty string set for variable
-    var classColor = '';
+    let classColor = '';
 
     if (t == '1') {
       classColor = 'red';
@@ -982,7 +982,7 @@ $(document).ready(function () {
     }
 
     //for loop that goes through all the children of a column - replaces the current white class with either red or black according to the turn
-    for (var i = 5; i < column.children().length; i--) {
+    for (let i = 5; i < column.children().length; i--) {
       if (column.children().eq(i).hasClass('white')) {
         column.children().eq(i).removeClass('white');
         column.children().eq(i).addClass(classColor);
@@ -995,7 +995,7 @@ $(document).ready(function () {
   };
 
   //turn 1
-  var turn = 1;
+  let turn = 1;
 
   //listening to span id="turn" for 1 or 2
   $('#turn').text(turn);
