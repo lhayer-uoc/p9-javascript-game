@@ -11,3 +11,11 @@
 .flex-3 {
   flex: 3;
 }
+
+.flex.flex-columns {
+  flex-direction: column;
+}
+
+.flex.flex-rows {
+  flex-direction: row;
+}

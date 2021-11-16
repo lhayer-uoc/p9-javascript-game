@@ -9,109 +9,81 @@
     <link href="/css/global.css" rel="stylesheet">
     <link href="/css/header.css" rel="stylesheet">
     <link href="/css/play.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>    
   </head>
-  <!-- <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-    <a href="room-game" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-      <i class="bi bi-controller" style="font-size: 5rem; color: blue;"></i>
-    </a>
-  
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-      <li><strong></strong><a href="room-game" class="nav-link px-2 link-secondary">Salas</a></strong></li>
-    </ul>
-    <div class="col-md-3 text-end">
-      <a href="room-game"><button type="button" class="btn btn-outline-primary me-2">Salir</button></a>
-      <a href="login"><button type="button" class="btn btn-dark">Cerrar sesion</button></a>
-    </div>
-    </header>
-  <header>
-    <p class="text-center">Turn: <span id="turn"></span></p>
-  </header> -->
+
   <body>
     <div class="header">
       <div class="game-name">
-        Nombre del juego
+        <a href="/room-game">Nombre del juego</a>
       </div>
       <div class="flex">
         <div class="user-name-header"></div>
         <div class="user-action"></div>
       </div>
     </div>
-    <div class="container fluid">
-      <div class="row">
-        <div class="col-3">
-          <div class="row"><i class=" bi bi-person "  style="font-size: 10rem; color: yellow; text-align: center;"></i></i></div>
-          <div class="row"><i class=" bi bi-person" style="font-size: 10rem; color: green; text-align: center;"></i></i></div>
+
+    <div class="container flex flex-rows">
+      <div id="players-left" class="flex flex-1 flex-columns">
+        <div id="player-1">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
         </div>
-        <div class="col-6">
-          <div class="container" style= "text-align: center">
-            <div id="game">
-              <div id="columnOne">
-                <div id="a6" class="white"></div>
-                <div id="a5" class="white"></div>
-                <div id="a4" class="white"></div>
-                <div id="a3" class="white"></div>
-                <div id="a2" class="white"></div>
-                <div id="a1" class="white"></div>
-              </div>
-              <div id="columnTwo">
-                <div id="b6" class="white"></div>
-                <div id="b5" class="white"></div>
-                <div id="b4" class="white"></div>
-                <div id="b3" class="white"></div>
-                <div id="b2" class="white"></div>
-                <div id="b1" class="white"></div>
-              </div>
-              <div id="columnThree">
-                <div id="c6" class="white"></div>
-                <div id="c5" class="white"></div>
-                <div id="c4" class="white"></div>
-                <div id="c3" class="white"></div>
-                <div id="c2" class="white"></div>
-                <div id="c1" class="white"></div>
-              </div>
-              <div id="columnFour">
-                <div id="d6" class="white"></div>
-                <div id="d5" class="white"></div>
-                <div id="d4" class="white"></div>
-                <div id="d3" class="white"></div>
-                <div id="d2" class="white"></div>
-                <div id="d1" class="white"></div>
-              </div>
-              <div id="columnFive">
-                <div id="e6" class="white"></div>
-                <div id="e5" class="white"></div>
-                <div id="e4" class="white"></div>
-                <div id="e3" class="white"></div>
-                <div id="e2" class="white"></div>
-                <div id="e1" class="white"></div>
-              </div>
-              <div id="columnSix">
-                <div id="f6" class="white"></div>
-                <div id="f5" class="white"></div>
-                <div id="f4" class="white"></div>
-                <div id="f3" class="white"></div>
-                <div id="f2" class="white"></div>
-                <div id="f1" class="white"></div>
-              </div>
-              <div id="columnSeven">
-                <div id="g6" class="white"></div>
-                <div id="g5" class="white"></div>
-                <div id="g4" class="white"></div>
-                <div id="g3" class="white"></div>
-                <div id="g2" class="white"></div>
-                <div id="g1" class="white"></div>
-              </div>
-            </div>
-            </div>
-            </div>
-            <div class="col-3">
-              <div class="row"><i class=" bi-person" style="font-size: 10rem; color: blue; text-align: center;"></i></i></div>
-              <div class="row"><i class=" bi-person" style="font-size: 10rem; color: red; text-align: center;"></i></i></div>
-            </div>
-            </div>
+        <div id="player-3">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
+        </div>
+      </div>
+      <div id="game-container flex flex-3">
+        <canvas id="game-canvas" width="800" height="800"></canvas></div>
+      <div id="players-right" class="flex flex-1 flex-columns">
+        <div id="player-2">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
+        </div>
+        <div id="player-4">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
   <footer>
     <script type="text/javascript" src="/js/play.js"></script>
