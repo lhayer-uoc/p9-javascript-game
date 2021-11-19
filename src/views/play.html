@@ -23,10 +23,13 @@
         <div class="user-action"></div>
       </div>
     </div>
+    <div>
+      <button id="backpath" type="button" class="btn btn-outline-dark">Volver</button>
+    </div>
 
     <div class="container flex flex-rows">
       <div id="players-left" class="flex flex-1 flex-columns">
-        <div id="player-1">
+        <div id="player-1" class="hidden">
           <div class="user-name-container flex">
             <span class="user-name"></span>
             <span class="user-exit">X</span>
@@ -39,7 +42,7 @@
             <span class="user-points"></span>
           </div>
         </div>
-        <div id="player-3">
+        <div id="player-3" class="hidden">
           <div class="user-name-container flex">
             <span class="user-name"></span>
             <span class="user-exit">X</span>
@@ -54,9 +57,10 @@
         </div>
       </div>
       <div id="game-container flex flex-3">
-        <canvas id="game-canvas" width="800" height="800"></canvas></div>
+        <div id="game-board"></div>
+      </div>
       <div id="players-right" class="flex flex-1 flex-columns">
-        <div id="player-2">
+        <div id="player-2" class="hidden">
           <div class="user-name-container flex">
             <span class="user-name"></span>
             <span class="user-exit">X</span>
@@ -69,7 +73,7 @@
             <span class="user-points"></span>
           </div>
         </div>
-        <div id="player-4">
+        <div id="player-4" class="hidden">
           <div class="user-name-container flex">
             <span class="user-name"></span>
             <span class="user-exit">X</span>

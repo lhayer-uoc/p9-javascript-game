@@ -1,6 +1,6 @@
 .container {
   margin-top: 20px;
-  height: 80vh;
+  /* height: 80vh; */
 }
 
 .user-name-container {
@@ -33,6 +33,20 @@
   justify-content: space-between;
 }
 
-#game-canvas {
-  border: 1px solid #000000;
+#game-board {
+  margin-top: 60px;
+}
+
+#game-board .board-row .board-cell {
+  border: 1px solid black;
+  height: 30px;
+  width: 30px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+#backpath {
+  margin: 10px 40px;
 }
