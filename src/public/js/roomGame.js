@@ -15,7 +15,6 @@ $(document).ready(async function () {
 
   if (user) {
     renderUser(user);
-    renderHeaderActions(user);
   }
 
   if (rooms && rooms.length) {
@@ -183,17 +182,6 @@ $(document).ready(async function () {
     }
   }
 
-  function renderHeaderActions(user) {
-    if (user) {
-      $('.user-name-header').append('<span>').text(`Hola ${user.name}`);
-      $('.user-action').append('<span>').text('Salir');
-      $('.user-action').on('click', () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('favouriteRoom');
-        window.location.replace('/login');
-      });
-    }
-  }
   // PAINT FUNCTIONS
 
   function paintUserLogo(user) {
