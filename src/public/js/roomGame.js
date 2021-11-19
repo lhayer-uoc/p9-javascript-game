@@ -33,7 +33,7 @@ $(document).ready(async function () {
   }
 
   async function getUser(id) {
-    const response = await fetch(`http://localhost:3000/users/${id}`, {
+    const response = await fetch(`http://localhost:3000/api/users/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ $(document).ready(async function () {
   }
 
   async function getRooms() {
-    const response = await fetch('http://localhost:3000/rooms', {
+    const response = await fetch('http://localhost:3000/api/rooms', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ $(document).ready(async function () {
   }
 
   async function getRoom(id) {
-    const response = await fetch(`http://localhost:3000/rooms/${id}`, {
+    const response = await fetch(`http://localhost:3000/api/rooms/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ $(document).ready(async function () {
   }
 
   async function updateRoom(room) {
-    const response = await fetch(`http://localhost:3000/rooms/${room.id}`, {
+    const response = await fetch(`http://localhost:3000/api/rooms/${room.id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ $(document).ready(async function () {
       roomId: room.id,
     };
 
-    const response = await fetch('http://localhost:3000/games', {
+    const response = await fetch('http://localhost:3000/api/games', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -113,14 +113,17 @@ $(document).ready(async function () {
       turn: null,
     };
 
-    const response = await fetch(`http://localhost:3000/games/${room.game}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(game),
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/games/${room.game}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(game),
+      }
+    );
     return response.json();
   }
 
