@@ -288,7 +288,7 @@ $(document).ready(async function () {
       }
 
       setTimeout(() => {
-        window.location.replace(`/play/${game.id}`);
+        window.location.replace(`/play?game=${game.id}`);
       }, 1500);
     }
   }

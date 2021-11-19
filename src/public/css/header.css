@@ -15,3 +15,9 @@
 .header .user-action {
   cursor: pointer;
 }
+
+.header .game-name a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
