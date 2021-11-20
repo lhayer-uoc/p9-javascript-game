@@ -19,3 +19,7 @@
 .flex.flex-rows {
   flex-direction: row;
 }
+
+.flex-justify-center {
+  justify-content: center;
+}

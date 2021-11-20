@@ -1,12 +1,14 @@
 $(document).ready(async function () {
   const queryParams = new URLSearchParams(window.location.search);
   const gameId = queryParams.get('game');
-  if (gameId) {
-    const game = await getGameById(gameId);
-    console.log(game);
+  let game = null;
 
-    renderPlayers(game);
+  if (gameId) {
+    game = await getGameById(gameId);
+
+    await renderPlayers(game);
     renderBoard();
+    renderActionButtons();
     renderPlayerFirstCell(game);
     setBackNavigation();
   }
@@ -23,6 +25,41 @@ $(document).ready(async function () {
     return response.json();
   }
 
+  async function updateGame(game) {
+    const response = await fetch(`http://localhost:3000/api/games/${game.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(game),
+    });
+    return response.json();
+  }
+
+  async function getRooms() {
+    const response = await fetch('http://localhost:3000/api/rooms', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function updateRoom(room) {
+    const response = await fetch(`http://localhost:3000/api/rooms/${room.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(room),
+    });
+    return response.json();
+  }
+
   async function getUser(id) {
     const response = await fetch(`http://localhost:3000/api/users/${id}`, {
       method: 'GET',
@@ -34,10 +71,19 @@ $(document).ready(async function () {
     return response.json();
   }
 
+  function getUserFromLocalStorage() {
+    const userStringified = localStorage.getItem('user');
+    if (userStringified) {
+      return JSON.parse(userStringified);
+    }
+    return null;
+  }
+
   // RENDER FUNCTIONS
 
-  function showUserContainer(idx) {
+  function showUserContainer(idx, playerData) {
     const userContainer = $(`#player-${idx}`).get(0);
+    $(userContainer).attr('data-user-id', playerData.playerId);
     $(userContainer).toggleClass('hidden');
   }
 
@@ -80,7 +126,7 @@ $(document).ready(async function () {
   }
 
   function renderUser(user, playerData, idx) {
-    showUserContainer(idx);
+    showUserContainer(idx, playerData);
     paintUserLogo(user.image, idx);
     paintUserName(user.name, idx);
     paintUserColor(user.color, idx);
@@ -123,6 +169,20 @@ $(document).ready(async function () {
     }
   }
 
+  function renderActionButtons() {
+    const user = getUserFromLocalStorage();
+    const startButton = $(
+      `[data-user-id=${user.id}] button#user-start-button`
+    ).get(0);
+    $(startButton).on('click', startGame);
+    $(startButton).toggleClass('hidden');
+
+    const endButton = $(
+      `[data-user-id=${user.id}] button#user-exit-button`
+    ).get(0);
+    $(endButton).on('click', endGame);
+  }
+
   function renderPlayerFirstCell(game) {}
 
   // PLAY LOGIC
@@ -131,11 +191,8 @@ $(document).ready(async function () {
   }
 
   function getUserColor() {
-    const userStringified = localStorage.getItem('user');
-    if (userStringified) {
-      const user = JSON.parse(userStringified);
-      return user.color ? user.color : '#000';
-    }
+    const user = getUserFromLocalStorage();
+    return user && user.color ? user.color : '#000';
   }
 
   function takeCell(event) {
@@ -145,6 +202,58 @@ $(document).ready(async function () {
     const cell = getCellTarget(rowId, colId);
     const userColor = getUserColor();
     $(cell).css('background-color', userColor);
+  }
+
+  function showExitButton(user) {
+    const startButton = $(
+      `[data-user-id=${user.id}] button#user-start-button`
+    ).get(0);
+    $(startButton).toggleClass('hidden');
+
+    const endButton = $(
+      `[data-user-id=${user.id}] button#user-exit-button`
+    ).get(0);
+    $(endButton).toggleClass('hidden');
+  }
+
+  function changePlayerState(user, state) {
+    const playerData = game.playersData.find(p => p.playerId === user.id);
+    playerData.state = state;
+  }
+
+  function areAllPlayersReady(game) {
+    return !game.playersData.some(pd => pd.state !== 'Listo');
+  }
+
+  async function startGame() {
+    const user = getUserFromLocalStorage();
+    changePlayerState(user, 'Listo');
+    const response = await updateGame(game);
+    if (response) {
+      game = response;
+      showExitButton(user);
+    }
+
+    if (areAllPlayersReady(game)) {
+      alert('Ha comenzado el juego!!!');
+    }
+  }
+
+  async function endGame() {
+    const user = getUserFromLocalStorage();
+    changePlayerState(user, 'Fuera');
+    const response = await updateGame(game);
+    if (response) {
+      game = response;
+      // TODO: SI ES MI TURNO ... PASAR
+      const rooms = await getRooms();
+      const myRoom = rooms.find(r => r.game === game.id);
+      if (myRoom) {
+        myRoom.users = myRoom.users.filter(userId => userId !== user.id);
+        await updateRoom(myRoom);
+        navigateHome();
+      }
+    }
   }
 
   // NAVIGATION
