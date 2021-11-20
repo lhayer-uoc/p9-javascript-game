@@ -11,6 +11,7 @@ class GameModel {
 //   {
 //     playerId: user id value,
 //     points: number,
+//     state: PlayerState
 //   }
 // ]
 

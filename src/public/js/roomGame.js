@@ -130,7 +130,7 @@ $(document).ready(async function () {
     const playersData = [];
     if (room.users.length) {
       room.users.forEach(user => {
-        playersData.push({ playerId: user, points: 0 });
+        playersData.push({ playerId: user, points: 0, state: 'Esperando' });
       });
     }
     return playersData;
