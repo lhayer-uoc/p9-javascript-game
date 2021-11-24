@@ -3,6 +3,7 @@ const express = require('express');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const { Server } = require('socket.io');
 
 const app = express();
 
@@ -41,6 +42,15 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 app.use('/', indexRouter);
 
 const server = http.createServer(app);
+
+const io = new Server(server, {
+  /* options */
+});
+
+io.on('connection', socket => {
+  console.log(socket.id);
+  socket.emit('hello', 'world');
+});
 
 server.listen(port, function () {
   console.log('Express server listening on port ' + port);
