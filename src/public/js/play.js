@@ -1,16 +1,83 @@
 $(document).ready(async function () {
-    let user = null;
-    let rooms = [];
-    let dragElement = null;
-  
-    try {
-      user = getUserFromLocalStorage();
-      // user = await getUser(); -- Actualmente usando los datos del localStorage
-      rooms = await getRooms();
-    } catch (error) {
-      console.log(error);
-      alert('Error al solicitar los datos del usuario');
-      return;
+  const socket = io();
+  setSocketListeners();
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const gameId = queryParams.get('game');
+  let game = null;
+
+  if (gameId) {
+    game = await getGameById(gameId);
+
+    await renderPlayers(game);
+    renderBoard();
+    renderActionButtons();
+    renderPlayerFirstCell(game);
+    setBackNavigation();
+  }
+
+  // FETCH FUNCTIONS
+  async function getGameById(id) {
+    const response = await fetch(`http://localhost:3000/api/games/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function updateGame(game) {
+    const response = await fetch(`http://localhost:3000/api/games/${game.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(game),
+    });
+    return response.json();
+  }
+
+  async function getRooms() {
+    const response = await fetch('http://localhost:3000/api/rooms', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  async function updateRoom(room) {
+    const response = await fetch(`http://localhost:3000/api/rooms/${room.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(room),
+    });
+    return response.json();
+  }
+
+  async function getUser(id) {
+    const response = await fetch(`http://localhost:3000/api/users/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+    return response.json();
+  }
+
+  function getUserFromLocalStorage() {
+    const userStringified = localStorage.getItem('user');
+    if (userStringified) {
+      return JSON.parse(userStringified);
     }
   
     if (user) {
@@ -301,5 +368,31 @@ $(document).ready(async function () {
         }, 1500);
       }
     }
-  });
-  
+  }
+
+  // NAVIGATION
+
+  function setBackNavigation() {
+    const backpathButton = $('#backpath').get(0);
+    $(backpathButton).on('click', endGame);
+  }
+
+  function navigateHome() {
+    window.location.replace('/room-game');
+  }
+
+  // SOCKET
+  function setSocketListeners() {
+    socket.on('connect', () => {
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+    });
+
+    socket.on('disconnect', () => {
+      console.log(socket.id); // undefined
+    });
+
+    socket.on('hello', arg => {
+      console.log(arg);
+    });
+  }
+});
