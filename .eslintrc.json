@@ -21,6 +21,7 @@
       "no-trailing-spaces": "off"
     },
     "globals": {
-        "$": "readonly"
+        "$": "readonly",
+        "io": "readonly"
     }
 }

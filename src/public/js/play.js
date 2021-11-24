@@ -1,4 +1,7 @@
 $(document).ready(async function () {
+  const socket = io();
+  setSocketListeners();
+
   const queryParams = new URLSearchParams(window.location.search);
   const gameId = queryParams.get('game');
   let game = null;
@@ -260,10 +263,25 @@ $(document).ready(async function () {
 
   function setBackNavigation() {
     const backpathButton = $('#backpath').get(0);
-    $(backpathButton).on('click', navigateHome);
+    $(backpathButton).on('click', endGame);
   }
 
   function navigateHome() {
     window.location.replace('/room-game');
+  }
+
+  // SOCKET
+  function setSocketListeners() {
+    socket.on('connect', () => {
+      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+    });
+
+    socket.on('disconnect', () => {
+      console.log(socket.id); // undefined
+    });
+
+    socket.on('hello', arg => {
+      console.log(arg);
+    });
   }
 });
