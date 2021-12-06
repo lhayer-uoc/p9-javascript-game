@@ -48,8 +48,21 @@ const io = new Server(server, {
 });
 
 io.on('connection', socket => {
-  console.log(socket.id);
-  socket.emit('hello', 'world');
+  socket.on('turn', turn => {
+    io.emit('turn', turn);
+  });
+
+  socket.on('movement', movement => {
+    io.emit('movement', movement);
+  });
+
+  socket.on('playerIn', () => {
+    socket.broadcast.emit('playerIn');
+  });
+
+  socket.on('playerOut', () => {
+    socket.broadcast.emit('playerOut');
+  });
 });
 
 server.listen(port, function () {
