@@ -5,6 +5,7 @@ $(document).ready(async function () {
   const queryParams = new URLSearchParams(window.location.search);
   const gameId = queryParams.get('game');
   let game = null;
+  let playerTurn = 0;
 
   if (gameId) {
     game = await getGameById(gameId);
@@ -12,8 +13,8 @@ $(document).ready(async function () {
     await renderPlayers(game);
     renderBoard();
     renderActionButtons();
-    renderPlayerFirstCell(game);
     setBackNavigation();
+    emitPlayerIn();
   }
 
   // FETCH FUNCTIONS
@@ -79,10 +80,23 @@ $(document).ready(async function () {
     if (userStringified) {
       return JSON.parse(userStringified);
     }
-  
-    if (user) {
-      renderUser(user);
-      renderHeaderActions(user);
+    return null;
+  }
+
+  // RENDER FUNCTIONS
+
+  function showUserContainer(idx, playerData) {
+    const userContainer = $(`#player-${idx}`).get(0);
+    $(userContainer).attr('data-user-id', playerData.playerId);
+    $(userContainer).removeClass('hidden');
+  }
+
+  function paintUserLogo(image, idx) {
+    const imageList = document.querySelectorAll(`#player-${idx} .user-logo`);
+
+    if (imageList.length) {
+      const imageElement = imageList[0];
+      imageElement.setAttribute('src', image);
     }
   
     if (rooms && rooms.length) {
@@ -200,174 +214,172 @@ $(document).ready(async function () {
       }
       return playersData;
     }
-  
-    // RENDER FUNCTIONS
-  
-    function renderUser(user) {
-      paintUserLogo(user);
-      paintUserName(user);
+  }
+
+  function renderActionButtons() {
+    const user = getUserFromLocalStorage();
+    const startButton = $(
+      `[data-user-id=${user.id}] button.user-start-button`
+    ).get(0);
+    $(startButton).on('click', startGame);
+    $(startButton).toggleClass('hidden');
+
+    const endButton = $(
+      `[data-user-id=${user.id}] button.user-exit-button`
+    ).get(0);
+    $(endButton).on('click', endGame);
+  }
+
+  async function renderTurn() {
+    const turnSpan = $('span#turn').get(0);
+    if (turnSpan) {
+      const player = await getUser(playerTurn);
+      if (player) {
+        $(turnSpan).text(player.name);
+      }
     }
-  
-    function renderRooms(rooms) {
-      rooms.forEach(room => {
-        const row = getRowSection(room);
-        row.on('dragenter', handleDragEnter);
-        row.on('dragleave', handleDragLeave);
-        row.on('dragover', handleDragOver);
-        row.on('drop dragdrop', handleDrop);
-        const nameSection = getRoomNameSection(room);
-        row.append(nameSection);
-        const playerSection = getRoomPlayersSection();
-        row.append(playerSection);
-        const stateSection = getRoomStateSection(room);
-        row.append(stateSection);
-  
-        $(row).appendTo('.rooms-container');
+  }
+
+  // PLAY LOGIC
+  function getCellTarget(rowId, colId) {
+    return $(`[data-row=${rowId}][data-col=${colId}]`).get(0);
+  }
+
+  function getUserColor(user) {
+    return user && user.color ? user.color : '#000';
+  }
+
+  async function sendNextTurn() {
+    const user = getUserFromLocalStorage();
+    const turn = await getValidNextTurn();
+    if (turn !== user.id) {
+      emitTurn(turn);
+    } else {
+      alert('Juego finalizado');
+      endGame();
+    }
+  }
+
+  async function takeCell(event) {
+    const user = getUserFromLocalStorage();
+    if (playerTurn === user.id) {
+      const cellTarget = event.target;
+      const rowId = $(cellTarget).attr('data-row');
+      const colId = $(cellTarget).attr('data-col');
+      const cell = getCellTarget(rowId, colId);
+      const userColor = getUserColor(user);
+      $(cell).css('background-color', userColor);
+      emitMovement({ rowId, colId, color: userColor });
+      sendNextTurn();
+    } else {
+      alert('Debes esperar tu turno.');
+    }
+  }
+
+  async function getValidNextTurn(playerId = null) {
+    playerId = await getNextTurn(playerId);
+    if (!(await isPlayerPlaying(playerId))) {
+      return getValidNextTurn(playerId);
+    }
+    return playerId;
+  }
+
+  async function getNextTurn(playerId = null) {
+    if (!playerId) {
+      const user = getUserFromLocalStorage();
+      playerId = user.id;
+    }
+
+    const game = await getGameById(gameId);
+    if (game) {
+      const playerIdx = game.playersData.findIndex(playerData => {
+        return playerData.playerId === playerId;
       });
+
+      return playerIdx < game.playersData.length - 1
+        ? game.playersData[playerIdx + 1].playerId
+        : game.playersData[0].playerId;
     }
-  
-    async function renderPlayers(rooms) {
-      for (const room of rooms) {
-        if (room.users.length) {
-          for (const id of room.users) {
-            const user = await getUser(id);
-            const roomRow = $(`[data-room-id=${room.id}]`);
-            if (roomRow) {
-              const playersContainer = $(roomRow).children('.players-container');
-              if (playersContainer) {
-                const image = $('<img>', {
-                  class: 'user-logo img-thumbnail',
-                  src: user.image,
-                });
-                $(image).appendTo(playersContainer);
-              }
-            }
-          }
+    return 0;
+  }
+
+  function showExitButton(user) {
+    const startButton = $(
+      `[data-user-id=${user.id}] button.user-start-button`
+    ).get(0);
+    $(startButton).toggleClass('hidden');
+
+    const endButton = $(
+      `[data-user-id=${user.id}] button.user-exit-button`
+    ).get(0);
+    $(endButton).toggleClass('hidden');
+  }
+
+  async function changePlayerState(user, state) {
+    game = await getGameById(gameId);
+    const playerData = game.playersData.find(p => p.playerId === user.id);
+    playerData.state = state;
+  }
+
+  function areAllPlayersReady(game) {
+    return !game.playersData.some(pd => pd.state !== 'Listo');
+  }
+
+  async function startGame() {
+    const user = getUserFromLocalStorage();
+    await changePlayerState(user, 'Listo');
+    const response = await updateGame(game);
+    if (response) {
+      showExitButton(user);
+    }
+
+    if (areAllPlayersReady(game)) {
+      console.log('ha comenzado el juego');
+      emitTurn(user.id);
+    }
+  }
+
+  async function arePlayersPlaying() {
+    const game = await getGameById(gameId);
+    return game.playersData.some(pdata => pdata.state !== 'Fuera');
+  }
+
+  async function endGame() {
+    const user = getUserFromLocalStorage();
+    await changePlayerState(user, 'Fuera');
+    const response = await updateGame(game);
+    if (response) {
+      if (playerTurn === user.id && (await arePlayersPlaying())) {
+        const turn = await getValidNextTurn();
+        if (turn !== user.id) {
+          emitTurn(turn);
         }
       }
-    }
-  
-    function renderHeaderActions(user) {
-      if (user) {
-        $('.user-name-header').append('<span>').text(`Hola ${user.name}`);
-        $('.user-action').append('<span>').text('Salir');
-        $('.user-action').on('click', () => {
-          localStorage.removeItem('user');
-          localStorage.removeItem('favouriteRoom');
-          window.location.replace('/login');
-        });
+      const rooms = await getRooms();
+      const myRoom = rooms.find(r => r.game === game.id);
+      if (myRoom) {
+        myRoom.users = myRoom.users.filter(userId => userId !== user.id);
+        await updateRoom(myRoom);
+        emitPlayerOut();
+        navigateHome();
       }
     }
-    // PAINT FUNCTIONS
-  
-    function paintUserLogo(user) {
-      const imageList = document.querySelectorAll('.user-logo');
-  
-      if (imageList.length) {
-        const imageElement = imageList[0];
-        imageElement.setAttribute('src', user.image);
-        imageElement.addEventListener('dragstart', handleImageDragStart);
-        imageElement.addEventListener('dragend', handleImageDragStop);
-      }
-    }
-  
-    function paintUserName(user) {
-      const userSpans = document.querySelectorAll('.user-name');
-      if (userSpans.length) {
-        const spanElement = userSpans[0];
-        spanElement.textContent = user.name;
-      }
-    }
-  
-    function getRowSection(room) {
-      return $('<div>', { class: 'row draggable', 'data-room-id': room.id });
-    }
-  
-    function getRoomNameSection(room) {
-      const $div = $('<div>', { class: 'col-4' })
-        .append('<span>')
-        .text(room.name);
-      return $div;
-    }
-  
-    function getRoomPlayersSection() {
-      return $('<div>', { class: 'col-4 players-container flex' });
-    }
-  
-    function getRoomStateSection(room) {
-      const $div = $('<div>', { class: 'col-4' });
-      return $div.append('<span>').text(room.state);
-    }
-  
-    // LOGIC
-    async function addUserToRoom(room) {
-      if (user && !room.users.includes(user.id)) {
-        try {
-          room.users.push(user.id);
-          return await updateRoom(room);
-        } catch (error) {
-          console.error(error);
-          alert('Error al actualizar la sala');
-          return null;
-        }
-      } else {
-        alert('El usuario ya se encuentra registrado en la sala');
-      }
-    }
-  
-    // EVENTS INTERACTIONS
-  
-    function handleImageDragStart(e) {
-      dragElement = $(this).clone();
-      $(dragElement).attr('data-user-id', user.id);
-      this.style.opacity = '0.4';
-    }
-  
-    function handleImageDragStop(e) {
-      this.style.opacity = '1';
-    }
-  
-    function handleDragEnter(e) {
-      e.preventDefault();
-      this.classList.add('over');
-    }
-  
-    function handleDragLeave(e) {
-      e.preventDefault();
-      this.classList.remove('over');
-    }
-  
-    function handleDragOver(e) {
-      this.classList.add('over');
-      e.preventDefault();
-    }
-  
-    async function handleDrop(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      this.classList.remove('over');
-      const roomId = $(this).attr('data-room-id');
-      const room = await getRoomById(roomId);
-      const updatedRoom = await addUserToRoom(room);
-      if (updatedRoom) {
-        const playersContainerElement = $(this).children('.players-container');
-        $(dragElement).appendTo(playersContainerElement);
-        localStorage.setItem('favouriteRoom', room.id);
-  
-        // TODO UPDATE ROOM STATE
-  
-        let game = null;
-        if (!updatedRoom.game) {
-          game = await createGame(room);
-        } else {
-          game = await updateGame(room);
-        }
-  
-        setTimeout(() => {
-          window.location.replace(`/play/${game.id}`);
-        }, 1500);
-      }
-    }
+  }
+
+  function emitMovement(movement) {
+    socket.emit('movement', { gameTargetId: gameId, movement });
+  }
+
+  function emitTurn(turn) {
+    socket.emit('turn', { gameTargetId: gameId, turn });
+  }
+
+  function emitPlayerIn() {
+    socket.emit('playerIn');
+  }
+
+  function emitPlayerOut() {
+    socket.emit('playerOut');
   }
 
   // NAVIGATION
@@ -381,18 +393,45 @@ $(document).ready(async function () {
     window.location.replace('/room-game');
   }
 
+  async function isPlayerPlaying(playerId) {
+    const game = await getGameById(gameId);
+    if (game) {
+      const playerData = game.playersData.find(
+        pdata => pdata.playerId === playerId
+      );
+      return playerData.state !== 'Fuera';
+    }
+    return false;
+  }
+
   // SOCKET
   function setSocketListeners() {
-    socket.on('connect', () => {
-      console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-    });
+    socket.on('connect', () => {});
 
     socket.on('disconnect', () => {
-      console.log(socket.id); // undefined
+      endGame();
     });
 
-    socket.on('hello', arg => {
-      console.log(arg);
+    socket.on('turn', async data => {
+      const { gameTargetId, turn } = data;
+      if (gameTargetId === gameId) {
+        playerTurn = turn;
+        renderTurn();
+      }
+    });
+
+    socket.on('movement', data => {
+      const { gameTargetId, movement } = data;
+      const { rowId, colId, color } = movement;
+      if (gameTargetId === gameId) {
+        const cell = getCellTarget(rowId, colId);
+        $(cell).css('background-color', color);
+      }
+    });
+
+    socket.on('playerIn', async () => {
+      game = await getGameById(gameId);
+      await renderPlayers(game);
     });
   }
 });

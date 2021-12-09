@@ -24,12 +24,39 @@
         <div class="user-action"></div>
       </div>
     </div>
-    <div class="flex-container rows">
-      <div class="flex flex-1 sidebar-user">
-        <div class="container">
-          
-          <div class="user-name-container">
-            <h5>Jugador</h5>
+    <div class="flex flex-align-center">
+      <button id="backpath" type="button" class="btn btn-outline-dark">Volver</button>
+      <div class="flex flex-1 flex-justify-center">
+        <span>Turno: </span>
+        <span id="turn"> </span>
+      </div>
+    </div>
+
+    <div class="container flex flex-rows">
+      <div id="players-left" class="flex flex-1 flex-columns">
+        <div id="player-1" class="hidden">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
+          <div class="flex flex-cols flex-justify-center">
+            <button type="button" class="user-start-button btn btn-outline-success hidden">Empezar</button>
+            <button type="button" class="user-exit-button btn btn-outline-danger hidden">Salir</button>
+          </div>
+        </div>
+        <div id="player-3" class="hidden">
+          <div class="flex flex-cols flex-justify-center">
+            <button type="button" class="user-start-button btn btn-outline-success hidden">Empezar</button>
+            <button type="button" class="user-exit-button btn btn-outline-danger hidden">Salir</button>
+          </div>
+          <div class="user-name-container flex">
             <span class="user-name"></span>
           </div>
           <div class="user-logo-container flex">
@@ -40,24 +67,42 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-3 rooms-section">
-        <div class="container">
-          <div class="rooms-header">
-            <h3>Salas del juego</h3>
-            <span>Ingresa a una sala disponible para comenzar a jugar.</span>
+      <div id="game-container flex flex-3">
+        <div id="game-board"></div>
+      </div>
+      <div id="players-right" class="flex flex-1 flex-columns">
+        <div id="player-2" class="hidden">
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
           </div>
-          <div class="rooms-container d-grid gap-5">
-            <div class="row">
-              <div class="col-4">
-                <h5>Sala</h5>
-              </div>
-              <div class="col-4">
-                <h5>Jugadores</h5>
-              </div>
-              <div class="col-4">
-                <h5>Estado</h5>
-              </div>
-            </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
+          </div>
+          <div class="flex flex-cols flex-justify-center">
+            <button type="button" class="user-start-button btn btn-outline-success hidden">Empezar</button>
+            <button type="button" class="user-exit-button btn btn-outline-danger hidden">Salir</button>
+          </div>
+        </div>
+        <div id="player-4" class="hidden">
+          <div class="flex flex-cols flex-justify-center">
+            <button type="button" class="user-start-button btn btn-outline-success hidden">Empezar</button>
+            <button type="button" class="user-exit-button btn btn-outline-danger hidden">Salir</button>
+          </div>
+          <div class="user-name-container flex">
+            <span class="user-name"></span>
+            <span class="user-exit">X</span>
+          </div>
+          <div class="user-logo-container flex">
+            <img class="user-logo img-thumbnail">
+          </div>
+          <div class="user-points-container flex">
+            <span>Puntos: </span>
+            <span class="user-points"></span>
           </div>
         </div>
       </div>

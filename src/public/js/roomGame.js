@@ -1,11 +1,12 @@
 $(document).ready(async function () {
+  const socket = io();
+  setSocketListeners();
   let user = null;
   let rooms = [];
   let dragElement = null;
 
   try {
     user = getUserFromLocalStorage();
-    // user = await getUser(); -- Actualmente usando los datos del localStorage
     rooms = await getRooms();
   } catch (error) {
     console.log(error);
@@ -163,12 +164,13 @@ $(document).ready(async function () {
 
   async function renderPlayers(rooms) {
     for (const room of rooms) {
-      if (room.users.length) {
-        for (const id of room.users) {
-          const user = await getUser(id);
-          const roomRow = $(`[data-room-id=${room.id}]`);
-          if (roomRow) {
-            const playersContainer = $(roomRow).children('.players-container');
+      const roomRow = $(`[data-room-id=${room.id}]`);
+      if (roomRow) {
+        const playersContainer = $(roomRow).children('.players-container');
+        $(playersContainer).html('');
+        if (room.users.length) {
+          for (const id of room.users) {
+            const user = await getUser(id);
             if (playersContainer) {
               const image = $('<img>', {
                 class: 'user-logo img-thumbnail',
@@ -291,5 +293,22 @@ $(document).ready(async function () {
         window.location.replace(`/play?game=${game.id}`);
       }, 1500);
     }
+  }
+
+  // SOCKET
+  function setSocketListeners() {
+    socket.on('playerOut', async () => {
+      rooms = await getRooms();
+      if (rooms && rooms.length) {
+        renderPlayers(rooms);
+      }
+    });
+
+    socket.on('playerIn', async () => {
+      rooms = await getRooms();
+      if (rooms && rooms.length) {
+        renderPlayers(rooms);
+      }
+    });
   }
 });
