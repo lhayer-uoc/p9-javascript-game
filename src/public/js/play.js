@@ -21,7 +21,7 @@ $(document).ready(async function () {
   async function getGameById(id) {
     const response = await fetch(`http://localhost:3000/api/games/${id}`, {
       method: 'GET',
-      headers: {
+      headers: { //protocolo de comunicacion
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
