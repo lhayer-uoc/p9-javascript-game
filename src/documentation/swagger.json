@@ -1,0 +1,519 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Javascript Game API",
+    "description": "Javascript Game API documentation (P9 - Project)"
+  },
+  "host": "localhost:3000",
+  "basePath": "/api",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "Returns all users.\n",
+        "parameters": [],
+        "operationId": "findUsers",
+        "responses": {
+          "200": {
+            "description": "Return all users from the application",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new user in the application.",
+        "operationId": "addUser",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User to add to the application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return new user.",
+            "schema": {
+              "$ref": "#/definitions/NewUser"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "Returns a user based on a single ID",
+        "operationId": "find user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return user found.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a user in the application.",
+        "operationId": "updateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewUser"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return updated user.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "deletes a single user based on the ID supplied",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of user to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns user deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/games": {
+      "get": {
+        "description": "Returns all games.\n",
+        "parameters": [],
+        "operationId": "findGames",
+        "responses": {
+          "200": {
+            "description": "Returns all games from the application",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Game"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new game in the application.",
+        "operationId": "addGame",
+        "parameters": [
+          {
+            "name": "game",
+            "in": "body",
+            "description": "Game to add to the application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewGame"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns new game.",
+            "schema": {
+              "$ref": "#/definitions/NewGame"
+            }
+          }
+        }
+      }
+    },
+    "/games/{id}": {
+      "get": {
+        "description": "Returns a game based on a single ID",
+        "operationId": "find game by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of game to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns game found.",
+            "schema": {
+              "$ref": "#/definitions/Game"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a game in the application.",
+        "operationId": "updateGame",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of game to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "game",
+            "in": "body",
+            "description": "Game to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewGame"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns updated game.",
+            "schema": {
+              "$ref": "#/definitions/Game"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "deletes a game based on the ID supplied",
+        "operationId": "deleteGame",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of game to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns game deleted",
+            "schema": {
+              "$ref": "#/definitions/Game"
+            }
+          }
+        }
+      }
+    },
+    "/rooms": {
+      "get": {
+        "description": "Returns all rooms.\n",
+        "parameters": [],
+        "operationId": "findRooms",
+        "responses": {
+          "200": {
+            "description": "Returns all rooms from the application",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Room"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Creates a new room in the application.",
+        "operationId": "addRoom",
+        "parameters": [
+          {
+            "name": "room",
+            "in": "body",
+            "description": "Room to add to the application",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewRoom"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns new room.",
+            "schema": {
+              "$ref": "#/definitions/NewRoom"
+            }
+          }
+        }
+      }
+    },
+    "/rooms/{id}": {
+      "get": {
+        "description": "Returns a room based on a single ID",
+        "operationId": "find room by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of room to fetch",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns room found.",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "Update a room in the application.",
+        "operationId": "updateRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of room to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "room",
+            "in": "body",
+            "description": "Room to update",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NewRoom"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns updated room.",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "deletes a room based on the ID supplied",
+        "operationId": "deleteRoom",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of room to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns room deleted",
+            "schema": {
+              "$ref": "#/definitions/Room"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "color":  {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "NewUser": {
+      "type": "object",
+      "required": [
+        "name",
+        "email",
+        "password",
+        "color"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "color":  {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "PlayerData": {
+      "type": "object",
+      "properties": {
+        "playerId": {
+          "type": "string"
+        },
+        "points": {
+          "type": "number"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["Esperando", "Listo", "Fuera"]
+        }
+      }
+    },
+    "Game": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "playersData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerData"
+          }
+
+        },
+        "turn": {
+          "type": "string",
+          "description": "Player ID who owns the turn"
+        }
+      }
+    },
+    "NewGame": {
+      "type": "object",
+      "required": [
+        "playersData"
+      ],
+      "properties": {
+        "playersData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlayerData"
+          }
+
+        },
+        "turn": {
+          "type": "string",
+          "description": "Player ID who owns the turn"
+        }
+      }
+    },
+    "Room": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["Esperando jugadores", "En curso"]
+        },
+        "game": {
+          "type": "string"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "NewRoom": {
+      "type": "object",
+      "required": [
+        "name",
+        "state"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["Esperando jugadores", "En curso"]
+        },
+        "game": {
+          "type": "string"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
