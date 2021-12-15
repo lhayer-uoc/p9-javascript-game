@@ -5,6 +5,8 @@ const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./documentation/swagger.json');
 
 const app = express();
 
@@ -34,6 +36,7 @@ const roomRouter = require('./routes/api/room');
 const gameRouter = require('./routes/api/game');
 const userRouter = require('./routes/api/user');
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/login', loginRouter);
 app.use('/signup', signupRouter);
 app.use('/play', playRouter);
