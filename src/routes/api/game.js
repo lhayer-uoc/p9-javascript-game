@@ -10,13 +10,16 @@ router.get('/', async (req, res) => {
     res.json(games);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
     const game = await GameController.getGame(id);
 
     if (game) {
@@ -28,13 +31,16 @@ router.get('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
     const gameDeleted = await GameController.deleteGame(id);
     if (gameDeleted) {
       res.statusCode = 200;
@@ -45,13 +51,16 @@ router.delete('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
     const { body } = req;
 
     const { playersData, turn } = body;
@@ -67,7 +76,7 @@ router.patch('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
@@ -79,7 +88,7 @@ router.post('/', async (req, res) => {
     res.json(gameCreated);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 

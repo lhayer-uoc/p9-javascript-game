@@ -9,13 +9,16 @@ router.get('/', async (req, res) => {
     res.json(users);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
 
     const user = await UserController.getUser(id);
 
@@ -28,13 +31,16 @@ router.get('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
 
     const userDeleted = await UserController.deleteUser(id);
     if (userDeleted) {
@@ -46,16 +52,29 @@ router.delete('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.patch('/:id', async (req, res) => {
   try {
+    const requiredFields = ['name', 'email', 'password', 'color'];
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
 
     const { body } = req;
     const { name, email, password, color, image } = body;
+
+    if (
+      requiredFields.some(
+        field => typeof body[field] !== 'undefined' && !body[field]
+      )
+    ) {
+      throw new Error('Campos inválidos');
+    }
+
     const user = { name, email, password, color, image };
 
     const userUpdated = await UserController.updateUser(id, user);
@@ -69,19 +88,33 @@ router.patch('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
+
+    const requiredFields = ['name', 'email', 'password', 'color'];
+    if (
+      requiredFields.some(
+        field => typeof body[field] !== 'undefined' && !body[field]
+      )
+    ) {
+      throw new Error('Campos inválidos');
+    }
+    const userFound = await UserController.getUserByEmail(body.email);
+    if (userFound) {
+      throw new Error('El usuario ya existe');
+    }
+
     const userCreated = await UserController.createUser(body);
     res.statusCode = 200;
     res.json(userCreated);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 

@@ -9,13 +9,16 @@ router.get('/', async (req, res) => {
     res.json(rooms);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
     const room = await RoomController.getRoom(id);
 
     if (room) {
@@ -27,13 +30,16 @@ router.get('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
 
     const roomDeleted = await RoomController.deleteRoom(id);
 
@@ -46,13 +52,16 @@ router.delete('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      throw new Error('Id invalido');
+    }
     const { body } = req;
     const { name, users, state, game } = body;
     const room = { name, users, state, game };
@@ -67,7 +76,7 @@ router.patch('/:id', async (req, res) => {
     }
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
@@ -79,7 +88,7 @@ router.post('/', async (req, res) => {
     res.json(roomCreated);
   } catch (error) {
     res.statusCode = 500;
-    res.json({ message: error });
+    res.json({ message: error.message });
   }
 });
 
