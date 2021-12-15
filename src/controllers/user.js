@@ -32,13 +32,13 @@ class UserController {
 
   static async updateUser(id, user) {
     // TODO: ADD VALIDATORS
-    await User.updateOne({ id }, user);
+    await User.updateOne({ _id: id }, user);
     return await User.findById(id);
   }
 
   static async deleteUser(id) {
     const user = await User.findById(id);
-    await User.deleteOne({ id });
+    await User.deleteOne({ _id: id });
     return user;
   }
 }

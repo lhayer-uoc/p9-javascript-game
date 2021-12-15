@@ -18,13 +18,13 @@ class RoomController {
   }
 
   static async updateRoom(id, room) {
-    await Room.updateOne({ id }, room);
+    await Room.updateOne({ _id: id }, room);
     return await Room.findById(id);
   }
 
   static async deleteRoom(id) {
     const room = await Room.findById(id);
-    await Room.deleteOne({ id });
+    await Room.deleteOne({ _id: id });
     return room;
   }
 }
