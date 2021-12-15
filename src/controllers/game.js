@@ -26,13 +26,13 @@ class GameController {
   }
 
   static async updateGame(id, game) {
-    await Game.updateOne({ id }, game);
+    await Game.updateOne({ _id: id }, game);
     return await Game.findById(id);
   }
 
   static async deleteGame(id) {
     const game = await Game.findById(id);
-    await Game.deleteOne({ id });
+    await Game.deleteOne({ _id: id });
 
     if (game) {
       // Delete game in room model
