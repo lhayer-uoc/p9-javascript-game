@@ -4,8 +4,13 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { Server } = require('socket.io');
+const mongoose = require('mongoose');
 
 const app = express();
+
+mongoose
+  .connect('mongodb://localhost:27017/p9-javascript-game')
+  .catch(error => console.error(error));
 
 // Configuración del servidor
 const serverConfigFile = fs.readFileSync(

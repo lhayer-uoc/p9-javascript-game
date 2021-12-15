@@ -1,11 +1,16 @@
-class RoomModel {
-  constructor(id, name, users, state, game) {
-    this.id = id;
-    this.name = name;
-    this.users = users;
-    this.state = state;
-    this.game = game;
-  }
-}
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const roomSchema = new Schema({
+  name: String,
+  users: [mongoose.ObjectId],
+  state: {
+    type: String,
+    enum: ['Esperando jugadores', 'En curso'],
+  },
+  game: mongoose.ObjectId,
+});
+
+const RoomModel = mongoose.model('room', roomSchema);
 
 module.exports = RoomModel;

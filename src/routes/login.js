@@ -8,13 +8,15 @@ const UserController = require('../controllers/user');
 
 router.post('/', async (req, res) => {
   const { body } = req;
+  const isValidUser = await LoginController.loginUser(body);
 
-  if (LoginController.loginUser(body)) {
-    const user = UserController.getUserByEmail(body.email);
+  if (isValidUser) {
+    const users = await UserController.getUserByEmail(body.email);
+
     // TODO DELETE USER PASSWORD ON RESPONSE
     // delete user.password;
     res.statusCode = 200;
-    res.json(user);
+    res.json(users[0]);
   } else {
     res.statusCode = 404;
     res.json({ message: 'User not found' });

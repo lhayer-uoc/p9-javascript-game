@@ -8,7 +8,8 @@ const SignupController = require('../controllers/signup');
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
-    const user = SignupController.signupUser(body);
+    const user = await SignupController.signupUser(body);
+
     if (user) {
       res.statusCode = 200;
       res.json();
