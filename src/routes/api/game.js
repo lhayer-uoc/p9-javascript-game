@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const GameController = require('../../controllers/game');
-const GameModel = require('../../models/Game');
 
 router.get('/', async (req, res) => {
   try {
-    const games = GameController.getGames();
+    const games = await GameController.getGames();
     res.statusCode = 200;
     res.json(games);
   } catch (error) {
@@ -18,9 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-
-    const game = GameController.getGame(idNormalized);
+    const game = await GameController.getGame(id);
 
     if (game) {
       res.statusCode = 200;
@@ -38,8 +35,7 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-    const gameDeleted = GameController.deleteGame(idNormalized);
+    const gameDeleted = await GameController.deleteGame(id);
     if (gameDeleted) {
       res.statusCode = 200;
       res.json(gameDeleted);
@@ -56,14 +52,12 @@ router.delete('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-
     const { body } = req;
 
     const { playersData, turn } = body;
 
-    const game = new GameModel(idNormalized, playersData, turn);
-    const gameUpdated = GameController.updateGame(idNormalized, game);
+    const game = { playersData, turn };
+    const gameUpdated = await GameController.updateGame(id, game);
     if (gameUpdated) {
       res.statusCode = 200;
       res.json(gameUpdated);
@@ -80,7 +74,7 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
-    const gameCreated = GameController.createGame(body);
+    const gameCreated = await GameController.createGame(body);
     res.statusCode = 200;
     res.json(gameCreated);
   } catch (error) {

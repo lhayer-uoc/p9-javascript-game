@@ -1,18 +1,20 @@
-class GameModel {
-  constructor(id, playersData, turn) {
-    this.id = id;
-    this.playersData = playersData;
-    this.turn = turn;
-  }
-}
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-// PLAYERS DATA STRUCTURE
-// [
-//   {
-//     playerId: user id value,
-//     points: number,
-//     state: PlayerState
-//   }
-// ]
+const playerDataSchema = new Schema({
+  playerId: mongoose.ObjectId,
+  points: Number,
+  state: {
+    type: String,
+    enum: ['Esperando', 'Listo', 'Fuera'],
+  },
+});
+
+const gameSchema = new Schema({
+  playersData: [playerDataSchema],
+  turn: String,
+});
+
+const GameModel = mongoose.model('game', gameSchema);
 
 module.exports = GameModel;
