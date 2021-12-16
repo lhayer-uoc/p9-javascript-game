@@ -1,44 +1,31 @@
-const RoomModel = require('../models/Room');
-const roomService = require('../services/room');
+const Room = require('../models/Room');
 
 class RoomController {
-  static getRooms() {
-    return roomService.getRooms();
+  static async getRooms() {
+    const rooms = await Room.find({});
+    return rooms;
   }
 
-  static getRoom(id) {
-    const rooms = roomService.getRooms();
-    return rooms.find(room => room.id === id);
+  static async getRoom(id) {
+    const room = await Room.findById(id);
+    return room;
   }
 
-  static createRoom(room) {
-    const id = Math.floor(4 + Math.random() * 10);
+  static async createRoom(room) {
     const { name, users, state, game } = room;
-    const newRoom = new RoomModel(id, name, users, state, game);
-    const rooms = roomService.getRooms();
-    rooms.push(newRoom);
+    const newRoom = await Room.create({ name, users, state, game });
     return newRoom;
   }
 
-  static updateRoom(id, room) {
-    const rooms = roomService.getRooms();
-    const roomFound = rooms.find(r => r.id === id);
-    if (roomFound) {
-      roomFound.name = room.name;
-      roomFound.users = room.users;
-      roomFound.state = room.state;
-      roomFound.game = room.game;
-    }
-    return roomFound;
+  static async updateRoom(id, room) {
+    await Room.updateOne({ _id: id }, room);
+    return await Room.findById(id);
   }
 
-  static deleteRoom(id) {
-    const rooms = roomService.getRooms();
-    const roomFound = rooms.find(r => r.id === id);
-    if (roomFound) {
-      roomService.setRooms(rooms.filter(room => room.id !== id));
-    }
-    return roomFound;
+  static async deleteRoom(id) {
+    const room = await Room.findById(id);
+    await Room.deleteOne({ _id: id });
+    return room;
   }
 }
 

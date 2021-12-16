@@ -1,52 +1,45 @@
-const UserModel = require('../models/User');
-const userService = require('../services/user');
+const User = require('../models/User');
 
 class UserController {
-  static getUsers() {
-    return userService.getUsers();
+  static async getUsers() {
+    const users = await User.find({});
+    return users;
   }
 
-  static getUser(id) {
-    const users = userService.getUsers();
-    return users.find(user => user.id === id);
+  static async getUser(id) {
+    const user = await User.findById(id);
+    return user;
   }
 
-  static getUserByEmail(email) {
-    const users = userService.getUsers();
-    return users.find(user => user.email === email);
+  static async getUserByEmail(email) {
+    const user = await User.find({ email });
+    return user;
   }
 
-  static createUser(user) {
+  static async createUser(user) {
     // TODO: ADD VALIDATORS
-    const id = Math.floor(4 + Math.random() * 10);
+
     const { name, email, password, color, image } = user;
-    const newUser = new UserModel(id, name, email, password, color, image);
-    const users = userService.getUsers();
-    users.push(newUser);
+    const newUser = await User.create({
+      name,
+      email,
+      password,
+      color,
+      image,
+    });
     return newUser;
   }
 
-  static updateUser(id, user) {
+  static async updateUser(id, user) {
     // TODO: ADD VALIDATORS
-    const users = userService.getUsers();
-    const userFound = users.find(u => u.id === id);
-    if (userFound) {
-      userFound.name = user.name;
-      userFound.email = user.email;
-      userFound.password = user.password;
-      userFound.color = user.color;
-      userFound.image = user.image;
-    }
-    return userFound;
+    await User.updateOne({ _id: id }, user);
+    return await User.findById(id);
   }
 
-  static deleteUser(id) {
-    const users = userService.getUsers();
-    const userFound = users.find(u => u.id === id);
-    if (userFound) {
-      userService.setUsers(users.filter(user => user.id !== id));
-    }
-    return userFound;
+  static async deleteUser(id) {
+    const user = await User.findById(id);
+    await User.deleteOne({ _id: id });
+    return user;
   }
 }
 

@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const RoomController = require('../../controllers/room');
-const RoomModel = require('../../models/Room');
 
 router.get('/', async (req, res) => {
   try {
-    const rooms = RoomController.getRooms();
+    const rooms = await RoomController.getRooms();
     res.statusCode = 200;
     res.json(rooms);
   } catch (error) {
@@ -17,9 +16,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-
-    const room = RoomController.getRoom(idNormalized);
+    const room = await RoomController.getRoom(id);
 
     if (room) {
       res.statusCode = 200;
@@ -37,8 +34,8 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-    const roomDeleted = RoomController.deleteRoom(idNormalized);
+
+    const roomDeleted = await RoomController.deleteRoom(id);
 
     if (roomDeleted) {
       res.statusCode = 200;
@@ -56,14 +53,11 @@ router.delete('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-
     const { body } = req;
-
     const { name, users, state, game } = body;
+    const room = { name, users, state, game };
 
-    const room = new RoomModel(idNormalized, name, users, state, game);
-    const roomUpdated = RoomController.updateRoom(idNormalized, room);
+    const roomUpdated = await RoomController.updateRoom(id, room);
     if (roomUpdated) {
       res.statusCode = 200;
       res.json(roomUpdated);
@@ -80,7 +74,7 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
-    const roomCreated = RoomController.createRoom(body);
+    const roomCreated = await RoomController.createRoom(body);
     res.statusCode = 200;
     res.json(roomCreated);
   } catch (error) {

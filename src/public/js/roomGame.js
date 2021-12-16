@@ -78,14 +78,17 @@ $(document).ready(async function () {
   }
 
   async function updateRoom(room) {
-    const response = await fetch(`http://localhost:3000/api/rooms/${room.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(room),
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/rooms/${room._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(room),
+      }
+    );
     return response.json();
   }
 
@@ -93,7 +96,7 @@ $(document).ready(async function () {
     const game = {
       playersData: getPlayersData(room),
       turn: null,
-      roomId: room.id,
+      roomId: room._id,
     };
 
     const response = await fetch('http://localhost:3000/api/games', {
@@ -164,7 +167,7 @@ $(document).ready(async function () {
 
   async function renderPlayers(rooms) {
     for (const room of rooms) {
-      const roomRow = $(`[data-room-id=${room.id}]`);
+      const roomRow = $(`[data-room-id=${room._id}]`);
       if (roomRow) {
         const playersContainer = $(roomRow).children('.players-container');
         $(playersContainer).html('');
@@ -206,7 +209,7 @@ $(document).ready(async function () {
   }
 
   function getRowSection(room) {
-    return $('<div>', { class: 'row draggable', 'data-room-id': room.id });
+    return $('<div>', { class: 'row draggable', 'data-room-id': room._id });
   }
 
   function getRoomNameSection(room) {
@@ -227,9 +230,9 @@ $(document).ready(async function () {
 
   // LOGIC
   async function addUserToRoom(room) {
-    if (user && !room.users.includes(user.id)) {
+    if (user && !room.users.includes(user._id)) {
       try {
-        room.users.push(user.id);
+        room.users.push(user._id);
         return await updateRoom(room);
       } catch (error) {
         console.error(error);
@@ -245,7 +248,7 @@ $(document).ready(async function () {
 
   function handleImageDragStart(e) {
     dragElement = $(this).clone();
-    $(dragElement).attr('data-user-id', user.id);
+    $(dragElement).attr('data-user-id', user._id);
     this.style.opacity = '0.4';
   }
 
@@ -278,7 +281,7 @@ $(document).ready(async function () {
     if (updatedRoom) {
       const playersContainerElement = $(this).children('.players-container');
       $(dragElement).appendTo(playersContainerElement);
-      localStorage.setItem('favouriteRoom', room.id);
+      localStorage.setItem('favouriteRoom', room._id);
 
       // TODO UPDATE ROOM STATE
 
@@ -290,7 +293,7 @@ $(document).ready(async function () {
       }
 
       setTimeout(() => {
-        window.location.replace(`/play?game=${game.id}`);
+        window.location.replace(`/play?game=${game._id}`);
       }, 1500);
     }
   }

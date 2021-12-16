@@ -1,56 +1,53 @@
-const GameModel = require('../models/Game');
-const gameService = require('../services/game');
+const mongoose = require('mongoose');
+const Game = require('../models/Game');
 const RoomController = require('./room');
 
 class GameController {
-  static getGames() {
-    return gameService.getGames();
+  static async getGames() {
+    const games = await Game.find({});
+    return games;
   }
 
-  static getGame(id) {
-    const games = gameService.getGames();
-    return games.find(game => game.id === id);
+  static async getGame(id) {
+    const game = await Game.findById(id);
+    return game;
   }
 
-  static createGame(game) {
-    const id = Math.floor(4 + Math.random() * 10);
+  static async createGame(game) {
     const { playersData, turn, roomId } = game;
-    const newGame = new GameModel(id, playersData, turn);
-    const games = gameService.getGames();
-    games.push(newGame);
+    const newGame = await Game.create({ playersData, turn });
+
     // Update game in room model
-    const room = RoomController.getRoom(roomId);
+    const room = await RoomController.getRoom(roomId);
     room.game = newGame.id;
-    RoomController.updateRoom(room.id, room);
+    await RoomController.updateRoom(room.id, room);
+
     return newGame;
   }
 
-  static updateGame(id, game) {
-    const games = gameService.getGames();
-    const gameFound = games.find(g => g.id === id);
-    if (gameFound) {
-      gameFound.playersData = game.playersData;
-      gameFound.turn = game.turn;
-    }
-    return gameFound;
+  static async updateGame(id, game) {
+    await Game.updateOne({ _id: id }, game);
+    return await Game.findById(id);
   }
 
-  static deleteGame(id) {
-    const games = gameService.getGames();
-    const gameFound = games.find(g => g.id === id);
-    if (gameFound) {
-      gameService.setGames(games.filter(game => game.id !== id));
+  static async deleteGame(id) {
+    const game = await Game.findById(id);
+    await Game.deleteOne({ _id: id });
+
+    if (game) {
       // Delete game in room model
-      const rooms = RoomController.getRooms();
-      rooms.forEach(room => {
-        if (room.game === gameFound.id) {
+      const rooms = await RoomController.getRooms();
+      for (let idx = 0; idx < rooms.length; idx++) {
+        const room = rooms[idx];
+
+        if (room.game.equals(new mongoose.Types.ObjectId(game.id))) {
           room.game = null;
-          RoomController.updateRoom(room.id, room);
+          await RoomController.updateRoom(room._id, room);
         }
-      });
+      }
     }
 
-    return gameFound;
+    return game;
   }
 }
 

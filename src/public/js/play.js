@@ -30,14 +30,17 @@ $(document).ready(async function () {
   }
 
   async function updateGame(game) {
-    const response = await fetch(`http://localhost:3000/api/games/${game.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(game),
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/games/${game._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(game),
+      }
+    );
     return response.json();
   }
 
@@ -53,14 +56,17 @@ $(document).ready(async function () {
   }
 
   async function updateRoom(room) {
-    const response = await fetch(`http://localhost:3000/api/rooms/${room.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(room),
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/rooms/${room._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(room),
+      }
+    );
     return response.json();
   }
 
@@ -219,13 +225,13 @@ $(document).ready(async function () {
   function renderActionButtons() {
     const user = getUserFromLocalStorage();
     const startButton = $(
-      `[data-user-id=${user.id}] button.user-start-button`
+      `[data-user-id=${user._id}] button.user-start-button`
     ).get(0);
     $(startButton).on('click', startGame);
     $(startButton).toggleClass('hidden');
 
     const endButton = $(
-      `[data-user-id=${user.id}] button.user-exit-button`
+      `[data-user-id=${user._id}] button.user-exit-button`
     ).get(0);
     $(endButton).on('click', endGame);
   }
@@ -252,7 +258,7 @@ $(document).ready(async function () {
   async function sendNextTurn() {
     const user = getUserFromLocalStorage();
     const turn = await getValidNextTurn();
-    if (turn !== user.id) {
+    if (turn !== user._id) {
       emitTurn(turn);
     } else {
       alert('Juego finalizado');
@@ -262,7 +268,7 @@ $(document).ready(async function () {
 
   async function takeCell(event) {
     const user = getUserFromLocalStorage();
-    if (playerTurn === user.id) {
+    if (playerTurn === user._id) {
       const cellTarget = event.target;
       const rowId = $(cellTarget).attr('data-row');
       const colId = $(cellTarget).attr('data-col');
@@ -287,7 +293,7 @@ $(document).ready(async function () {
   async function getNextTurn(playerId = null) {
     if (!playerId) {
       const user = getUserFromLocalStorage();
-      playerId = user.id;
+      playerId = user._id;
     }
 
     const game = await getGameById(gameId);
@@ -305,19 +311,19 @@ $(document).ready(async function () {
 
   function showExitButton(user) {
     const startButton = $(
-      `[data-user-id=${user.id}] button.user-start-button`
+      `[data-user-id=${user._id}] button.user-start-button`
     ).get(0);
     $(startButton).toggleClass('hidden');
 
     const endButton = $(
-      `[data-user-id=${user.id}] button.user-exit-button`
+      `[data-user-id=${user._id}] button.user-exit-button`
     ).get(0);
     $(endButton).toggleClass('hidden');
   }
 
   async function changePlayerState(user, state) {
     game = await getGameById(gameId);
-    const playerData = game.playersData.find(p => p.playerId === user.id);
+    const playerData = game.playersData.find(p => p.playerId === user._id);
     playerData.state = state;
   }
 
@@ -335,7 +341,7 @@ $(document).ready(async function () {
 
     if (areAllPlayersReady(game)) {
       console.log('ha comenzado el juego');
-      emitTurn(user.id);
+      emitTurn(user._id);
     }
   }
 
@@ -349,16 +355,16 @@ $(document).ready(async function () {
     await changePlayerState(user, 'Fuera');
     const response = await updateGame(game);
     if (response) {
-      if (playerTurn === user.id && (await arePlayersPlaying())) {
+      if (playerTurn === user._id && (await arePlayersPlaying())) {
         const turn = await getValidNextTurn();
-        if (turn !== user.id) {
+        if (turn !== user._id) {
           emitTurn(turn);
         }
       }
       const rooms = await getRooms();
-      const myRoom = rooms.find(r => r.game === game.id);
+      const myRoom = rooms.find(r => r.game === game._id);
       if (myRoom) {
-        myRoom.users = myRoom.users.filter(userId => userId !== user.id);
+        myRoom.users = myRoom.users.filter(userId => userId !== user._id);
         await updateRoom(myRoom);
         emitPlayerOut();
         navigateHome();
