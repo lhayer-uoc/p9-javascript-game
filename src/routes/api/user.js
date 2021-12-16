@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../../controllers/user');
-const UserModel = require('../../models/User');
 
 router.get('/', async (req, res) => {
   try {
-    const users = UserController.getUsers();
+    const users = await UserController.getUsers();
     res.statusCode = 200;
     res.json(users);
   } catch (error) {
@@ -17,9 +16,8 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
 
-    const user = UserController.getUser(idNormalized);
+    const user = await UserController.getUser(id);
 
     if (user) {
       res.statusCode = 200;
@@ -37,8 +35,8 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
-    const userDeleted = UserController.deleteUser(idNormalized);
+
+    const userDeleted = await UserController.deleteUser(id);
     if (userDeleted) {
       res.statusCode = 200;
       res.json(userDeleted);
@@ -55,20 +53,12 @@ router.delete('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const idNormalized = id && !isNaN(parseFloat(id)) ? parseFloat(id) : null;
 
     const { body } = req;
     const { name, email, password, color, image } = body;
+    const user = { name, email, password, color, image };
 
-    const user = new UserModel(
-      idNormalized,
-      name,
-      email,
-      password,
-      color,
-      image
-    );
-    const userUpdated = UserController.updateUser(idNormalized, user);
+    const userUpdated = await UserController.updateUser(id, user);
 
     if (userUpdated) {
       res.statusCode = 200;
@@ -86,7 +76,7 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
-    const userCreated = UserController.createUser(body);
+    const userCreated = await UserController.createUser(body);
     res.statusCode = 200;
     res.json(userCreated);
   } catch (error) {
