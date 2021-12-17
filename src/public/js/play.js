@@ -297,7 +297,6 @@ $(document).ready(async function () {
     }
 
     if (areAllPlayersReady(game)) {
-      console.log('ha comenzado el juego');
       emitTurn(user._id);
     }
   }
@@ -333,7 +332,10 @@ $(document).ready(async function () {
     socket.emit('movement', { gameTargetId: gameId, movement });
   }
 
-  function emitTurn(turn) {
+  async function emitTurn(turn) {
+    const game = await getGameById(gameId);
+    game.turn = turn;
+    await updateGame(game);
     socket.emit('turn', { gameTargetId: gameId, turn });
   }
 
