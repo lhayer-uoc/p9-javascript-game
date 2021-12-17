@@ -30,6 +30,12 @@
               "items": {
                 "$ref": "#/definitions/User"
               }
+            },
+            "500": {
+              "description": "General error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
             }
           }
         }
@@ -54,6 +60,12 @@
             "schema": {
               "$ref": "#/definitions/NewUser"
             }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -76,6 +88,18 @@
             "description": "Return user found.",
             "schema": {
               "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -107,6 +131,18 @@
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -128,6 +164,18 @@
             "schema": {
               "$ref": "#/definitions/User"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -145,6 +193,12 @@
               "items": {
                 "$ref": "#/definitions/Game"
               }
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -169,6 +223,12 @@
             "schema": {
               "$ref": "#/definitions/NewGame"
             }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -191,6 +251,18 @@
             "description": "Returns game found.",
             "schema": {
               "$ref": "#/definitions/Game"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -222,6 +294,18 @@
             "schema": {
               "$ref": "#/definitions/Game"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -243,6 +327,18 @@
             "schema": {
               "$ref": "#/definitions/Game"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -260,6 +356,12 @@
               "items": {
                 "$ref": "#/definitions/Room"
               }
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -284,6 +386,12 @@
             "schema": {
               "$ref": "#/definitions/NewRoom"
             }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -306,6 +414,18 @@
             "description": "Returns room found.",
             "schema": {
               "$ref": "#/definitions/Room"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -337,6 +457,18 @@
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -358,6 +490,18 @@
             "schema": {
               "$ref": "#/definitions/Room"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "General error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
@@ -368,13 +512,15 @@
       "type": "object",
       "properties": {
         "_id": {
-          "type": "string"
+          "type": "string",
+          "description": "Mongo Object Id"
         },
         "name": {
           "type": "string"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "description": "Email format"
         },
         "password": {
           "type": "string"
@@ -383,7 +529,8 @@
           "type": "string"
         },
         "image": {
-          "type": "string"
+          "type": "string",
+          "description": "Image in base64"
         }
       }
     },
@@ -400,16 +547,19 @@
           "type": "string"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "description": "Valid email format"
         },
         "password": {
           "type": "string"
         },
         "color":  {
-          "type": "string"
+          "type": "string",
+          "description": "Hexadecimal color"
         },
         "image": {
-          "type": "string"
+          "type": "string",
+          "description": "Base64 image"
         }
       }
     },
@@ -432,7 +582,8 @@
       "type": "object",
       "properties": {
         "_id": {
-          "type": "string"
+          "type": "string",
+          "description": "Mongo ObjectId"
         },
         "playersData": {
           "type": "array",
@@ -443,7 +594,7 @@
         },
         "turn": {
           "type": "string",
-          "description": "Player ID who owns the turn"
+          "description": "Player ID (Mongo ObjectId) who owns the turn"
         }
       }
     },
@@ -462,7 +613,7 @@
         },
         "turn": {
           "type": "string",
-          "description": "Player ID who owns the turn"
+          "description": "Player ID (Mongo ObjectId) who owns the turn"
         }
       }
     },
@@ -470,7 +621,8 @@
       "type": "object",
       "properties": {
         "_id": {
-          "type": "string"
+          "type": "string",
+          "description": "Mongo ObjectId"
         },
         "name": {
           "type": "string"
@@ -480,12 +632,14 @@
           "enum": ["Esperando jugadores", "En curso"]
         },
         "game": {
-          "type": "string"
+          "type": "string",
+          "description": "Mongo ObjectId"
         },
         "users": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "description": "User Mongo ObjectId"
           }
         }
       }
@@ -505,13 +659,29 @@
           "enum": ["Esperando jugadores", "En curso"]
         },
         "game": {
-          "type": "string"
+          "type": "string",
+          "description": "Mongo ObjectId"
         },
         "users": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "description": "User Mongo ObjectId"
           }
+        }
+      }
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
         }
       }
     }

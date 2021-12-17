@@ -13,13 +13,17 @@ $(document).ready(async function () {
 
   function renderHeaderActions(user) {
     if (user) {
+      const queryParams = new URLSearchParams(window.location.search);
+      const gameId = queryParams.get('game');
       $('.user-name-header').append('<span>').text(`Hola ${user.name}`);
-      $('.user-action').append('<span>').text('Salir');
-      $('.user-action').on('click', () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('favouriteRoom');
-        window.location.replace('/login');
-      });
+      if (!gameId) {
+        $('.user-action').append('<span>').text('Salir');
+        $('.user-action').on('click', () => {
+          localStorage.removeItem('user');
+          localStorage.removeItem('favouriteRoom');
+          window.location.replace('/login');
+        });
+      }
     }
   }
 
