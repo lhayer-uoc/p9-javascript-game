@@ -16,8 +16,10 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validaciones
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
     const room = await RoomController.getRoom(id);
 
@@ -37,8 +39,10 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validaciones
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
 
     const roomDeleted = await RoomController.deleteRoom(id);
@@ -58,14 +62,25 @@ router.delete('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
   try {
+    const requiredFields = ['name', 'state'];
     const { id } = req.params;
-    if (!id) {
-      throw new Error('Id invalido');
-    }
+
     const { body } = req;
     const { name, users, state, game } = body;
-    const room = { name, users, state, game };
 
+    // Validaciones
+    if (!id) {
+      throw new Error('Id inválido');
+    }
+    if (
+      requiredFields.some(
+        field => typeof body[field] !== 'undefined' && !body[field]
+      )
+    ) {
+      throw new Error('Campos inválidos');
+    }
+
+    const room = { name, users, state, game };
     const roomUpdated = await RoomController.updateRoom(id, room);
     if (roomUpdated) {
       res.statusCode = 200;
@@ -83,6 +98,13 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
+
+    // Validaciones
+    const requiredFields = ['name', 'state'];
+    if (requiredFields.some(field => !body[field])) {
+      throw new Error('Campos inválidos');
+    }
+
     const roomCreated = await RoomController.createRoom(body);
     res.statusCode = 200;
     res.json(roomCreated);

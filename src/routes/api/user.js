@@ -16,8 +16,10 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validaciones
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
 
     const user = await UserController.getUser(id);
@@ -38,8 +40,10 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validaciones
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
 
     const userDeleted = await UserController.deleteUser(id);
@@ -60,13 +64,14 @@ router.patch('/:id', async (req, res) => {
   try {
     const requiredFields = ['name', 'email', 'password', 'color'];
     const { id } = req.params;
-    if (!id) {
-      throw new Error('Id invalido');
-    }
 
     const { body } = req;
     const { name, email, password, color, image } = body;
 
+    // Validaciones
+    if (!id) {
+      throw new Error('Id inválido');
+    }
     if (
       requiredFields.some(
         field => typeof body[field] !== 'undefined' && !body[field]
@@ -96,16 +101,14 @@ router.post('/', async (req, res) => {
   try {
     const { body } = req;
 
+    // Validaciones
     const requiredFields = ['name', 'email', 'password', 'color'];
-    if (
-      requiredFields.some(
-        field => typeof body[field] !== 'undefined' && !body[field]
-      )
-    ) {
+    if (requiredFields.some(field => !body[field])) {
       throw new Error('Campos inválidos');
     }
     const userFound = await UserController.getUserByEmail(body.email);
-    if (userFound) {
+
+    if (userFound && userFound.length) {
       throw new Error('El usuario ya existe');
     }
 

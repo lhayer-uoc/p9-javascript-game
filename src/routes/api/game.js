@@ -18,7 +18,7 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
     const game = await GameController.getGame(id);
 
@@ -39,7 +39,7 @@ router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      throw new Error('Id invalido');
+      throw new Error('Id inválido');
     }
     const gameDeleted = await GameController.deleteGame(id);
     if (gameDeleted) {
@@ -57,13 +57,22 @@ router.delete('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
   try {
+    const requiredFields = ['playersData'];
     const { id } = req.params;
-    if (!id) {
-      throw new Error('Id invalido');
-    }
     const { body } = req;
-
     const { playersData, turn } = body;
+
+    // Validaciones
+    if (!id) {
+      throw new Error('Id inválido');
+    }
+    if (
+      requiredFields.some(
+        field => typeof body[field] !== 'undefined' && !body[field]
+      )
+    ) {
+      throw new Error('Campos inválidos');
+    }
 
     const game = { playersData, turn };
     const gameUpdated = await GameController.updateGame(id, game);
@@ -83,6 +92,13 @@ router.patch('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
+
+    // Validaciones
+    const requiredFields = ['playersData'];
+    if (requiredFields.some(field => !body[field])) {
+      throw new Error('Campos inválidos');
+    }
+
     const gameCreated = await GameController.createGame(body);
     res.statusCode = 200;
     res.json(gameCreated);
