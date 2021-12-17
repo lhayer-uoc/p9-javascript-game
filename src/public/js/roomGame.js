@@ -8,6 +8,9 @@ $(document).ready(async function () {
   try {
     user = getUserFromLocalStorage();
     rooms = await getRooms();
+    if (!rooms || !rooms.length) {
+      await createFirstTimeRooms();
+    }
   } catch (error) {
     console.log(error);
     alert('Error al solicitar los datos del usuario');
@@ -90,6 +93,24 @@ $(document).ready(async function () {
       }
     );
     return response.json();
+  }
+
+  async function createRoom(name) {
+    const room = {
+      name,
+      users: [],
+      state: 'Esperando jugadores',
+      game: null,
+    };
+
+    await fetch('http://localhost:3000/api/rooms', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(room),
+    });
   }
 
   async function createGame(room) {
@@ -277,24 +298,29 @@ $(document).ready(async function () {
     this.classList.remove('over');
     const roomId = $(this).attr('data-room-id');
     const room = await getRoomById(roomId);
-    const updatedRoom = await addUserToRoom(room);
-    if (updatedRoom) {
-      const playersContainerElement = $(this).children('.players-container');
-      $(dragElement).appendTo(playersContainerElement);
-      localStorage.setItem('favouriteRoom', room._id);
+    if (!room) {
+      alert('Se No existe la sala.');
+    } else if (room.users && room.users.length >= 4) {
+      alert('Se ha alcanzado el máximo de usuarios por sala.');
+    } else {
+      const updatedRoom = await addUserToRoom(room);
+      if (updatedRoom) {
+        const playersContainerElement = $(this).children('.players-container');
+        $(dragElement).appendTo(playersContainerElement);
+        localStorage.setItem('favouriteRoom', room._id);
 
-      // TODO UPDATE ROOM STATE
+        // TODO UPDATE ROOM STATE
+        let game = null;
+        if (!updatedRoom.game) {
+          game = await createGame(room);
+        } else {
+          game = await updateGame(room);
+        }
 
-      let game = null;
-      if (!updatedRoom.game) {
-        game = await createGame(room);
-      } else {
-        game = await updateGame(room);
+        setTimeout(() => {
+          window.location.replace(`/play?game=${game._id}`);
+        }, 1500);
       }
-
-      setTimeout(() => {
-        window.location.replace(`/play?game=${game._id}`);
-      }, 1500);
     }
   }
 
@@ -313,5 +339,14 @@ $(document).ready(async function () {
         renderPlayers(rooms);
       }
     });
+  }
+
+  // HELPERS
+  async function createFirstTimeRooms() {
+    const roomsToCreate = 4;
+    for (let idx = 0; idx < roomsToCreate; idx++) {
+      const name = `Sala ${idx}`;
+      await createRoom(name);
+    }
   }
 });
