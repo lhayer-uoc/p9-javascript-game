@@ -58,7 +58,7 @@ _Que cosas necesitas para instalar el software y como instalarlas_
 
 ### Instalación 🔧
 
-* _Para instalar la herramienta IDE nos dirigimos a la siguiente página: https://visualstudio.microsoft.com/es/downloads/_
+* _Para instalar la herramienta IDE VIsual Code nos dirigimos a la siguiente página: https://visualstudio.microsoft.com/es/downloads/_
 
 ```
  Una vez con el IDE instalado podemos instalar casi todo por la terminal.
