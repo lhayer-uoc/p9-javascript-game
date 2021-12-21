@@ -85,7 +85,7 @@ _Utilizamos Github https://github.com/lhayer-uoc/p9-javascript-game._
 
 ## Autores ✒️
 
-* **Luciano** - lhayer@uoc-edu
+* **Luciano** - lhayer@uoc.edu
 * **Iñigo** - iindave@uoc.edu
 * **Paula** - pvaqueroa@uoc.edu
 * **Victoria** - vpenamo@uoc.edu
